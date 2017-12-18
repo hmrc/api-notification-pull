@@ -16,24 +16,21 @@
 
 package uk.gov.hmrc.apinotificationpull.controllers
 
-import play.api.http.Status
+import java.util.UUID
+
 import play.api.test.FakeRequest
-import play.api.http.Status
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.WithFakeApplication
+import play.api.http.Status._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+class NotificationsControllerSpec extends UnitSpec with WithFakeApplication {
+  "delete notification by id" should {
+    "return 200 OK response" in {
+      val notificationId = UUID.randomUUID()
+      val controller = new NotificationsController
 
-  val fakeRequest = FakeRequest("GET", "/")
+      val result = controller.delete.apply(FakeRequest("DELETE", s"/$notificationId"))
 
-  "GET /" should {
-    "return 200" in {
-      val controller = new MicroserviceHelloWorld()
-      val result = controller.hello()(fakeRequest)
-      status(result) shouldBe Status.OK
+      status(result) shouldBe OK
     }
   }
-
 }

@@ -18,17 +18,20 @@ package uk.gov.hmrc.apinotificationpull.controllers
 
 import javax.inject.Singleton
 
+import play.api.Configuration
+import play.api.mvc.Action
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.mvc._
+import views.txt
 
 import scala.concurrent.Future
 
-@Singleton()
-class MicroserviceHelloWorld extends BaseController {
+@Singleton
+class DefinitionController(configuration: Configuration) extends BaseController {
+  private val apiScopeConfigKey = "api.definition.api-scope"
+  private lazy val apiScopeConfigException = new IllegalStateException(s"$apiScopeConfigKey is not configured")
+  private lazy val apiScopeKey = configuration.getString(apiScopeConfigKey).getOrElse(throw apiScopeConfigException)
 
-	def hello() = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
-
+  def get() = Action.async {
+    Future.successful(Ok(txt.definition(apiScopeKey)).withHeaders(CONTENT_TYPE -> JSON))
+  }
 }
