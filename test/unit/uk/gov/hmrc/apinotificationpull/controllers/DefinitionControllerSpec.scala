@@ -22,6 +22,7 @@ import play.api.http.Status._
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
+import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.txt
 
@@ -29,19 +30,13 @@ class DefinitionControllerSpec extends UnitSpec with WithFakeApplication {
 
   implicit val materializer: Materializer = fakeApplication.materializer
 
-  "with empty configuration DocumentationController.defintion" should {
-    "throw IllegalStateException" in {
-      val controller = new DefinitionController(Configuration())
-      val thrown = the[IllegalStateException] thrownBy await(controller.get().apply(FakeRequest("GET", "/api/definition")))
-      thrown.getMessage should equal("api.definition.api-scope is not configured")
-    }
-  }
+  val apiScope = "scope"
+  val apiContext = "context"
+  val appContext = new AppContext(Configuration("api.definition.api-scope" -> apiScope, "api.context" -> apiContext))
+  val controller = new DefinitionController(appContext)
 
-  "With valid configuration DocumentationController.definition" should {
-    val apiScope = "scope"
-    val config = Configuration("api.definition.api-scope" -> apiScope)
-    val controller = new DefinitionController(config)
-    val result = getDefinition(controller)
+  "DocumentationController.definition" should {
+    lazy val result = getDefinition(controller)
 
     "return OK status" in {
       status(result) shouldBe OK
@@ -52,11 +47,27 @@ class DefinitionControllerSpec extends UnitSpec with WithFakeApplication {
     }
 
     "return definition in the body" in {
-      jsonBodyOf(result) shouldBe Json.parse(txt.definition("scope").toString())
+      jsonBodyOf(result) shouldBe Json.parse(txt.definition(apiScope, apiContext).toString())
+    }
+  }
+
+  "DocumentationController.conf" should {
+    lazy val result = getConf(controller)
+
+    "return OK status" in {
+      status(result) shouldBe OK
+    }
+
+    "return application.raml in the body" in {
+      bodyOf(result) shouldBe txt.application(apiContext).toString()
     }
   }
 
   private def getDefinition(controller: DefinitionController) = {
     await(controller.get().apply(FakeRequest("GET", "/api/definition")))
+  }
+
+  private def getConf(controller: DefinitionController) = {
+    await(controller.conf("1.0","application.raml").apply(FakeRequest("GET", "/api/conf/1.0/application.raml")))
   }
 }

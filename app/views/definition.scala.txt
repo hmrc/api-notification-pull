@@ -1,5 +1,5 @@
 @import play.api.libs.json.Json
-@(apiScopeKey: String)
+@(apiScopeKey: String, apiContext: String)
 {
   "scopes": [
     {
@@ -11,7 +11,7 @@
   "api": {
     "name": "API Notification Pull",
     "description": "Allows for retrieval of notifications",
-    "context": "notifications",
+    "context": "@apiContext",
     "versions": [
       {
         "version": "1.0",

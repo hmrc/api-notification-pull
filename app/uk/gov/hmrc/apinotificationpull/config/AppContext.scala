@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.controllers
+package uk.gov.hmrc.apinotificationpull.config
 
 import javax.inject.Singleton
 
-import play.api.mvc.Action
-import uk.gov.hmrc.apinotificationpull.config.AppContext
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
-import views.txt
-
-import scala.concurrent.Future
+import play.api.Configuration
 
 @Singleton
-class DefinitionController(appContext: AppContext) extends BaseController {
-
-  def get() = Action.async {
-    Future.successful(Ok(txt.definition(appContext.apiScopeKey, appContext.apiContext)).withHeaders(CONTENT_TYPE -> JSON))
-  }
-
-  def conf(version: String, file: String) = Action.async {
-    Future.successful(Ok(txt.application(appContext.apiContext)))
-  }
+class AppContext(configuration: Configuration) {
+  private val apiScopeConfigKey = "api.definition.api-scope"
+  private val apiContextConfigKey = "api.context"
+  private def apiConfigException(apiConfigKey: String) = new IllegalStateException(s"$apiConfigKey is not configured")
+  lazy val apiScopeKey: String = configuration.getString(apiScopeConfigKey).getOrElse(throw apiConfigException(apiScopeConfigKey))
+  lazy val apiContext: String = configuration.getString(apiContextConfigKey).getOrElse(throw apiConfigException(apiContextConfigKey))
 }

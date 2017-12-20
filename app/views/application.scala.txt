@@ -1,18 +1,18 @@
-#%RAML 1.0
+@(apiContext: String)#%RAML 1.0
 ---
 
 title: API Notification Pull
 version: 1.0
 protocols: [ HTTPS ]
 baseUri: https://api.service.hmrc.gov.uk/
-mediaType: application/xml
+mediaType: [ application/xml ]
 
 uses:
 sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
   annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
   types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
-/notifications/{id}/:
+/@apiContext/{id}/:
   delete:
     displayName: Collect and delete a notification
     description: Allows collection of individual notifications. The notification will be returned in the response body and deleted.
