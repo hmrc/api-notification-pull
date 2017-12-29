@@ -32,7 +32,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication {
   private val xClientIdHeader = "X-Client-ID"
 
   "delete notification by id" when {
-    val validRequest = FakeRequest("DELETE", s"/notification/$notificationId").
+    val validRequest = FakeRequest("DELETE", s"/$notificationId").
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
 
     "notification does not exist" should {

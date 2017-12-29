@@ -18,7 +18,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     val notificationId = UUID.randomUUID()
     val clientId = "client-id"
     val xClientId = "X-Client-ID"
-    val validRequest = FakeRequest("DELETE", s"/notification/$notificationId").
+    val validRequest = FakeRequest("DELETE", s"/$notificationId").
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientId -> clientId)
 
     scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {

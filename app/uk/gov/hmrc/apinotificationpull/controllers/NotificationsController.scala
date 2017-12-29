@@ -33,7 +33,7 @@ class NotificationsController @Inject()(headerValidator: HeaderValidator) extend
     Future.successful(NotFound)
   }
 
-  def getAllByClientId(clientId: String) = Action.async { implicit request =>
+  def getAll = Action.async { implicit request =>
     Future.failed(new NotImplementedError)
   }
 

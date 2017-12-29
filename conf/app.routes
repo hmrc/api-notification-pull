@@ -1,4 +1,4 @@
 # microservice specific routes
 
-DELETE    /notification/:notificationId    @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.delete(notificationId)
-GET       /notifications/:clientId         @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.getAllByClientId(clientId)
+DELETE    /:notificationId    @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.delete(notificationId)
+GET       /                   @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.getAll
