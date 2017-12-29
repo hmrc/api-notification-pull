@@ -4,12 +4,12 @@ import java.util.UUID
 
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 import org.scalatest.OptionValues._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
+class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerTest {
 
-class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerSuite {
   feature("Retrieve a single message from the Pull Service (DELETE)") {
     info("As a 3rd Party")
     info("I want to successfully receive any notifications waiting for me")
@@ -18,7 +18,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     val notificationId = UUID.randomUUID()
     val clientId = "client-id"
     val xClientId = "X-Client-ID"
-    val validRequest = FakeRequest("DELETE", s"/$notificationId").
+    val validRequest = FakeRequest("DELETE", s"/notification/$notificationId").
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientId -> clientId)
 
     scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {
