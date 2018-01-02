@@ -28,10 +28,14 @@ import scala.concurrent.Future
 class NotificationsController @Inject()(headerValidator: HeaderValidator) extends BaseController {
 
   def delete(notificationId: String): Action[AnyContent] =
-    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async
-  {
-    Future.successful(NotFound)
-  }
+    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
+      Future.successful(NotFound)
+    }
+
+  def get(notificationId: String): Action[AnyContent] =
+    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
+      Future.successful(NotFound)
+    }
 
   def getAll = Action.async { implicit request =>
     Future.failed(new NotImplementedError)
