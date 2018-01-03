@@ -47,11 +47,13 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
     override val hooks = Seq.empty
   }
 
+  private val clientId = "client-id"
+
   trait Setup {
     val serviceConfiguration = mock[ServiceConfiguration]
     when(serviceConfiguration.baseUrl("api-notification-queue")).thenReturn(apiNotificationQueueUrl)
 
-    implicit val hc = HeaderCarrier().withExtraHeaders("X-Client-ID" -> "client-id")
+    implicit val hc = HeaderCarrier().withExtraHeaders("X-Client-ID" -> clientId)
     val connector = new ApiNotificationQueueConnector(serviceConfiguration, new TestHttpClient())
   }
 
@@ -71,7 +73,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
 
       stubFor(get(urlEqualTo("/notifications"))
         .withHeader(USER_AGENT, equalTo("api-notification-pull"))
-        .withHeader("X-Client-ID", equalTo("client-id"))
+        .withHeader("X-Client-ID", equalTo(clientId))
         .willReturn(
           aResponse()
             .withStatus(OK)
