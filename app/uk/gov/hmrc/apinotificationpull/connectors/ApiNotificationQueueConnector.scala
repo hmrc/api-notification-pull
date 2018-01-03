@@ -30,7 +30,7 @@ class ApiNotificationQueueConnector @Inject()(config: ServiceConfiguration, http
 
   private lazy val serviceBaseUrl: String = config.baseUrl("api-notification-queue")
 
-  def getNotifications(clientId: String)(implicit hc: HeaderCarrier): Future[Notifications] = {
+  def getNotifications()(implicit hc: HeaderCarrier): Future[Notifications] = {
     http.GET[Notifications](s"$serviceBaseUrl/notifications")
   }
 
