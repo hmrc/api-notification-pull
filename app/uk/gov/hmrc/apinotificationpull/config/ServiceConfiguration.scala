@@ -16,15 +16,11 @@
 
 package uk.gov.hmrc.apinotificationpull.config
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
-import play.api.Configuration
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.play.config.ServicesConfig
 
-@Singleton
-class AppContext @Inject()(configuration: Configuration) {
-  private val apiScopeConfigKey = "api.definition.api-scope"
-  private val apiContextConfigKey = "api.context"
-  private def apiConfigException(apiConfigKey: String) = new IllegalStateException(s"$apiConfigKey is not configured")
-  lazy val apiScopeKey: String = configuration.getString(apiScopeConfigKey).getOrElse(throw apiConfigException(apiScopeConfigKey))
-  lazy val apiContext: String = configuration.getString(apiContextConfigKey).getOrElse(throw apiConfigException(apiContextConfigKey))
+class ServiceConfiguration @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
+  override protected def mode = environment.mode
 }
