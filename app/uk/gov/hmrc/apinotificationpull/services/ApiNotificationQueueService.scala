@@ -27,7 +27,7 @@ import scala.concurrent.Future
 class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNotificationQueueConnector) {
 
   def getNotifications(clientId: String)(implicit hc: HeaderCarrier): Future[Notifications] = {
-    apiNotificationQueueConnector.getQueueNotifications(clientId)
+    apiNotificationQueueConnector.getNotifications(clientId)
   }
 
 }
