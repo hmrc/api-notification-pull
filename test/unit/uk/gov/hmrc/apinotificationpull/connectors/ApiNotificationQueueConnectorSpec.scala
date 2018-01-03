@@ -66,7 +66,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
     wireMockServer.stop()
   }
 
-  "getNotifications()" should {
+  "ApiNotificationQueueConnector.getNotifications()" should {
 
     "return the expected notifications from api-notification-queue " in new Setup {
       val notifications = Notifications(List("/notification/123", "/notification/456"))
