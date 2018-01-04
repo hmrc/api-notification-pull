@@ -61,6 +61,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
         val result = await(controller.delete(notificationId1.toString).apply(validRequest))
 
         status(result) shouldBe NOT_FOUND
+        bodyOf(result) shouldBe ""
       }
     }
 
