@@ -19,7 +19,7 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
-import play.api.mvc._
+import play.api.mvc.{AnyContent, Action, Result}
 import uk.gov.hmrc.apinotificationpull.model.JsErrorResponse
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder.toXml
@@ -49,22 +49,19 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
       Future.successful(NotFound)
     }
 
-  def getAll = {
-    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
-      implicit request =>
+  def getAll = (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
+    implicit request =>
 
-        def buildHeaderCarrier(): HeaderCarrier = {
-          request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
-            case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
-            case None => hc // it will never happen
-          }
+      def buildHeaderCarrier(): HeaderCarrier = {
+        request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
+          case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
+          case _ => hc // it will never happen
         }
+      }
 
-        apiNotificationQueueService.getNotifications()(buildHeaderCarrier()).map {
-          notifications => Ok(toXml(notifications)).as(XML)
-        } recover recovery
-
-    }
+      apiNotificationQueueService.getNotifications()(buildHeaderCarrier()).map {
+        notifications => Ok(toXml(notifications)).as(XML)
+      } recover recovery
   }
 
 }
