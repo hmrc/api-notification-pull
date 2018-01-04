@@ -48,6 +48,7 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
         def buildHeaderCarrier(): HeaderCarrier = {
           request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
             case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
+            case None => hc // it will never happen
           }
         }
 

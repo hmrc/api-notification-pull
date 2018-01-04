@@ -34,9 +34,14 @@ import scala.concurrent.Future
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
-  private val notificationId = UUID.randomUUID()
+  private val notificationId1 = UUID.randomUUID()
+  private val notificationId2 = UUID.randomUUID()
+  private val notifications = Notifications(List(s"/notification/$notificationId1", s"/notification/$notificationId2"))
+
   private val xClientIdHeader = "X-Client-ID"
-  private val notifications = Notifications(List("/notification/123", "/notification/456"))
+  private val clientId = "client_id"
+
+  private val validHeaders = Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
 
   trait Setup {
     implicit val materializer = fakeApplication.materializer
@@ -52,11 +57,10 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   "delete notification" should {
 
-    val validRequest = FakeRequest("DELETE", s"/$notificationId").
-      withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
+    val validRequest = FakeRequest("DELETE", s"/$notificationId1").withHeaders(validHeaders: _*)
 
     "return 404 NOT_FOUND response when the notification does not exist" in new Setup {
-        val result = await(controller.delete(notificationId.toString).apply(validRequest))
+        val result = await(controller.delete(notificationId1.toString).apply(validRequest))
 
         status(result) shouldBe NOT_FOUND
       }
@@ -64,15 +68,14 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   "get all notifications" should {
 
-    val validRequest = FakeRequest("GET", "/").
-      withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
+    val validRequest = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
 
     "return all notifications" in new Setup {
       val result = await(controller.getAll().apply(validRequest))
 
       status(result) shouldBe OK
 
-      val expectedXml = "<notifications><notification>/notification/123</notification><notification>/notification/456</notification></notifications>"
+      val expectedXml = s"<notifications><notification>/notification/$notificationId1</notification><notification>/notification/$notificationId2</notification></notifications>"
       bodyOf(result) shouldBe expectedXml
     }
   }
