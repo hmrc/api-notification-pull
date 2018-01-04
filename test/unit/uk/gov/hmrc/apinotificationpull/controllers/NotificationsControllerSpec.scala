@@ -17,6 +17,7 @@
 package uk.gov.hmrc.apinotificationpull.controllers
 
 import java.util.UUID
+import java.util.concurrent.TimeoutException
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -50,9 +51,6 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
     val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
     val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator)
-
-    when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
-      .thenReturn(Future.successful(notifications))
   }
 
   "delete notification" should {
@@ -71,11 +69,26 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
     val validRequest = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
 
     "return all notifications" in new Setup {
+      when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
+        .thenReturn(Future.successful(notifications))
+
       val result = await(controller.getAll().apply(validRequest))
 
       status(result) shouldBe OK
 
       val expectedXml = s"<notifications><notification>/notification/$notificationId1</notification><notification>/notification/$notificationId2</notification></notifications>"
+      bodyOf(result) shouldBe expectedXml
+    }
+
+    "fail if ApiNotificationQueueService failed" in new Setup {
+      when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
+        .thenReturn(Future.failed(new TimeoutException()))
+
+      val result = await(controller.getAll().apply(validRequest))
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+
+      val expectedXml = "<error_response><code>UNKNOWN_ERROR</code><errors><error><type>SERVICE_UNAVAILABLE</type><description>An unexpected error occurred</description></error></errors></error_response>"
       bodyOf(result) shouldBe expectedXml
     }
   }

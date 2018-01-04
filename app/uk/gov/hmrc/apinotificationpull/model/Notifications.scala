@@ -23,3 +23,8 @@ case class Notifications(notifications: List[String])
 object Notifications {
   implicit val notificationsJF = Json.format[Notifications]
 }
+
+object JsErrorResponse {
+  def apply(message: String) =
+    s"<error_response><code>UNKNOWN_ERROR</code><errors><error><type>SERVICE_UNAVAILABLE</type><description>$message</description></error></errors></error_response>"
+}

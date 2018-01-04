@@ -18,7 +18,9 @@ package uk.gov.hmrc.apinotificationpull.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.Logger
 import play.api.mvc._
+import uk.gov.hmrc.apinotificationpull.model.JsErrorResponse
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder.toXml
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
@@ -35,6 +37,12 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
   implicit val hc = HeaderCarrier()
 
   private val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
+
+  private def recovery: PartialFunction[Throwable, Result] = {
+    case e =>
+      Logger.error(s"An unexpected error occurred: ${e.getMessage}", e)
+      InternalServerError(JsErrorResponse("An unexpected error occurred"))
+  }
 
   def delete(notificationId: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
@@ -54,7 +62,8 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
 
         apiNotificationQueueService.getNotifications()(buildHeaderCarrier()).map {
           notifications => Ok(toXml(notifications)).as(XML)
-        }
+        } recover recovery
+
     }
   }
 
