@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
 import play.api.mvc.{AnyContent, Action, Result}
-import uk.gov.hmrc.apinotificationpull.model.JsErrorResponse
+import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder.toXml
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
@@ -41,7 +41,7 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
   private def recovery: PartialFunction[Throwable, Result] = {
     case e =>
       Logger.error(s"An unexpected error occurred: ${e.getMessage}", e)
-      InternalServerError(JsErrorResponse("An unexpected error occurred"))
+      InternalServerError(XmlErrorResponse("An unexpected error occurred"))
   }
 
   def delete(notificationId: String): Action[AnyContent] =
@@ -49,13 +49,16 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
       Future.successful(NotFound)
     }
 
-  def getAll = (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async {
-    implicit request =>
+  def getAll: Action[AnyContent] =
+    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
       def buildHeaderCarrier(): HeaderCarrier = {
         request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
           case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
-          case _ => hc // it will never happen
+          case _ =>
+            // It should never happen
+            Logger.warn(s"Header $X_CLIENT_ID_HEADER_NAME not found in the request.")
+            hc
         }
       }
 

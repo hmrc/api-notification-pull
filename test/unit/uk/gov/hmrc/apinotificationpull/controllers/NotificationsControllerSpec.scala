@@ -37,6 +37,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   private val notificationId1 = UUID.randomUUID()
   private val notificationId2 = UUID.randomUUID()
+
   private val notifications = Notifications(List(s"/notification/$notificationId1", s"/notification/$notificationId2"))
 
   private val xClientIdHeader = "X-Client-ID"
