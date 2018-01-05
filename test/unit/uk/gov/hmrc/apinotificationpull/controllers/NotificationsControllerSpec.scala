@@ -31,7 +31,9 @@ import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.xml.{Node, Utility, XML}
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
@@ -90,9 +92,27 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
 
-      val expectedXml = "<error_response><code>UNKNOWN_ERROR</code><errors><error><type>SERVICE_UNAVAILABLE</type><description>An unexpected error occurred</description></error></errors></error_response>"
-      bodyOf(result) shouldBe expectedXml
+      val expectedXml = scala.xml.Utility.trim(
+        <error_response>
+          <code>UNKNOWN_ERROR</code>
+          <errors>
+            <error>
+              <type>SERVICE_UNAVAILABLE</type>
+              <description>An unexpected error occurred</description>
+            </error>
+          </errors>
+        </error_response>)
+      string2xml(bodyOf(result)) shouldBe expectedXml
     }
+  }
+
+  protected def string2xml(s: String): Node = {
+    val xml = try {
+      XML.loadString(s)
+    } catch {
+      case NonFatal(thr) => fail("Not an xml: " + s, thr)
+    }
+    Utility.trim(xml)
   }
 
 }

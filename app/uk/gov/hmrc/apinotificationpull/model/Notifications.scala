@@ -26,5 +26,12 @@ object Notifications {
 
 object XmlErrorResponse {
   def apply(message: String) =
-    s"<error_response><code>UNKNOWN_ERROR</code><errors><error><type>SERVICE_UNAVAILABLE</type><description>$message</description></error></errors></error_response>"
+    <error_response>
+      <code>UNKNOWN_ERROR</code>
+      <errors>
+        <error><type>SERVICE_UNAVAILABLE</type>
+          <description>{message}</description>
+        </error>
+      </errors>
+    </error_response>.toString()
 }
