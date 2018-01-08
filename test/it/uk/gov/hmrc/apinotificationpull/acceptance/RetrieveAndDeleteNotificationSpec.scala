@@ -33,6 +33,9 @@ import play.api.test.Helpers._
 class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerTest
   with BeforeAndAfterEach with BeforeAndAfterAll {
 
+  private val clientId = "client-id"
+  private val xClientIdHeader = "X-Client-ID"
+
   private val externalServicesHost = "localhost"
   private val externalServicesPort = 11111
 
@@ -54,16 +57,50 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     externalServices.stop()
   }
 
-  feature("Retrieve(DELETE) a single message from the API Notification Pull service") {
+  feature("GET all notifications from the API Notification Pull service") {
+    info("As a 3rd Party")
+    info("I want to successfully retrieve all notification locations by client id")
+
+    val validRequest = FakeRequest("GET", "/").
+      withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
+
+    scenario("Successful GET and 3rd party receives the notifications locations") {
+      // TODO
+    }
+
+    scenario("Missing Accept Header") {
+      Given("You do not provide the Accept Header")
+      val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(ACCEPT))
+
+      When("You call make the 'GET' call to the api-notification-pull service")
+      val result = route(app = app, request).value
+
+      Then("You will be returned a 406 error response")
+      status(result) shouldBe NOT_ACCEPTABLE
+      contentAsString(result) shouldBe ""
+    }
+
+    scenario("Missing X-Client-Id Header") {
+      Given("The platform does not inject a X-Client-Id Header")
+      val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientIdHeader))
+
+      When("You call make the 'GET' call to the api-notification-pull service ")
+      val result = route(app = app, request).value
+
+      Then("You will be returned a 500 error response")
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+      contentAsString(result) shouldBe ""
+    }
+  }
+
+  feature("Retrieve(DELETE) a single notification from the API Notification Pull service") {
     info("As a 3rd Party")
     info("I want to successfully retrieve a notification waiting for me")
     info("So that I can progress my original declaration submission")
 
     val notificationId = UUID.randomUUID.toString
-    val clientId = "client-id"
-    val xClientId = "X-Client-ID"
     val validRequest = FakeRequest("DELETE", s"/$notificationId").
-      withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientId -> clientId)
+      withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
 
     scenario("Successful DELETE and 3rd party receives the notification") {
       Given("There is a notification waiting for you in the Notification Queue and you have the correct notification Id")
@@ -81,14 +118,13 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       verify(deleteRequestedFor(urlMatching(s"/notifications/$notificationId")))
     }
 
-    scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {
-      Given("A message has already been retrieved using the correct NotificationID")
+    scenario("3rd party provides notification Id but there are no notifications available or matching the Notification Id") {
+      Given("A notification has already been retrieved using the correct notification Id")
 
       stubFor(get(urlMatching(s"/notifications/$notificationId"))
-        .willReturn(aResponse()
-          .withStatus(NOT_FOUND)))
+        .willReturn(aResponse().withStatus(NOT_FOUND)))
 
-      When("You make another call using the same MessageID")
+      When("You make another call using the same notification Id")
       val result = route(app = app, validRequest).value
 
       Then("You will receive a 404 error response")
@@ -97,7 +133,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     }
 
     scenario("Invalid Accept Header") {
-      Given("You provide an invalid or missing Accept Header ")
+      Given("You do not provide the Accept Header")
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(ACCEPT))
 
       When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service")
@@ -109,8 +145,8 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     }
 
     scenario("Missing X-Client-Id Header") {
-      Given("The platform does not inject a X-Client-Id Header")
-      val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientId))
+      Given("You do not provide the X-Client-Id Header")
+      val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientIdHeader))
 
       When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service ")
       val result = route(app = app, request).value
