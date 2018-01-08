@@ -44,8 +44,7 @@ lazy val test = Seq(
   "org.mockito" % "mockito-core" % "2.13.0" % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % scope,
-  "com.github.tomakehurst" % "wiremock" % "2.10.1" % scope exclude("org.apache.httpcomponents","httpclient") exclude("org.apache.httpcomponents","httpcore"),
-  "org.mockito" % "mockito-core" % "2.6.2" % scope
+  "com.github.tomakehurst" % "wiremock" % "2.10.1" % scope exclude("org.apache.httpcomponents","httpclient") exclude("org.apache.httpcomponents","httpcore")
 )
 
 lazy val plugins: Seq[Plugins] = Seq.empty
