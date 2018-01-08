@@ -27,6 +27,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.HeaderNames._
+import play.api.http.ContentTypes.XML
 import play.api.http.Status._
 import play.api.libs.json.Json.{stringify, toJson}
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
@@ -136,7 +137,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
     "notification found" should {
       "return notification" in new Setup {
         val notificationPayload = "notification"
-        val notification = Notification(notificationId, Map(CONTENT_TYPE -> "application/xml"), notificationPayload)
+        val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), notificationPayload)
 
         stubFor(get(urlEqualTo(s"/notifications/$notificationId"))
             .withHeader(USER_AGENT, equalTo("api-notification-pull"))
@@ -144,7 +145,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
             aResponse()
               .withStatus(OK)
               .withBody(notificationPayload)
-              .withHeader(CONTENT_TYPE, "application/xml")))
+              .withHeader(CONTENT_TYPE, XML)))
 
         val result = await(connector.getById(notificationId)).get
 
@@ -158,7 +159,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
   "ApiNotificationQueueConnector.delete(notification: Notification)" should {
     "delete the notification" in new Setup {
       val notificationId = "notificationId"
-      val notification = Notification(notificationId, Map(CONTENT_TYPE -> "application/xml"), "payload")
+      val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "payload")
       val url: UrlPattern = urlEqualTo(s"/notifications/$notificationId")
 
       stubFor(delete(url).withHeader(USER_AGENT, equalTo("api-notification-pull"))
