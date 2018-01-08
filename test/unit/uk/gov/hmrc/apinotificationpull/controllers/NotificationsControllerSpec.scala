@@ -28,17 +28,16 @@ import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
-import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.fakes.SuccessfulHeaderValidatorFake
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.apinotificationpull.notifications.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import scala.xml.{Node, Utility, XML}
 import scala.concurrent.Future
 import scala.util.control.NonFatal
+import scala.xml.{Node, Utility, XML}
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach{
 
