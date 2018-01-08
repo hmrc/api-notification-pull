@@ -54,9 +54,9 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     externalServices.stop()
   }
 
-  feature("Retrieve a single message from the Pull Service (DELETE)") {
+  feature("Retrieve(DELETE) a single message from the API Notification Pull service") {
     info("As a 3rd Party")
-    info("I want to successfully receive any notifications waiting for me")
+    info("I want to successfully retrieve a notification waiting for me")
     info("So that I can progress my original declaration submission")
 
     val notificationId = UUID.randomUUID.toString
@@ -66,56 +66,56 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientId -> clientId)
 
     scenario("Successful DELETE and 3rd party receives the notification") {
-      Given("there is a message waiting for you in the Notification Queue and you have the correct NotificationID")
+      Given("There is a notification waiting for you in the Notification Queue and you have the correct notification Id")
       val notificationBody = "<notification>notification</notification>"
       stubForExistingNotification(notificationId, notificationBody)
 
-      When("you call making the 'DELETE' action to the api-notification-pull service")
+      When("You call making the 'DELETE' action to the api-notification-pull service")
       val result = route(app = app, validRequest).value
 
-      Then("you will receive the notification")
+      Then("You will receive the notification")
       status(result) shouldBe OK
       contentAsString(result).stripMargin shouldBe notificationBody
 
-      And("the notification will be DELETED")
+      And("The notification will be DELETED")
       verify(deleteRequestedFor(urlMatching(s"/notifications/$notificationId")))
     }
 
     scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {
-      Given("a message has already been retrieved using the correct NotificationID")
+      Given("A message has already been retrieved using the correct NotificationID")
 
       stubFor(get(urlMatching(s"/notifications/$notificationId"))
         .willReturn(aResponse()
           .withStatus(NOT_FOUND)))
 
-      When("you make another call using the same MessageID")
+      When("You make another call using the same MessageID")
       val result = route(app = app, validRequest).value
 
-      Then("you will receive a 404 error response")
+      Then("You will receive a 404 error response")
       status(result) shouldBe NOT_FOUND
       contentAsString(result) shouldBe "NOT FOUND"
     }
 
     scenario("Invalid Accept Header") {
-      Given("you provide an invalid or missing Accept Header ")
+      Given("You provide an invalid or missing Accept Header ")
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(ACCEPT))
 
-      When("you call make the 'DELETE' with a NotificationID call to the api-notification-pull service")
+      When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service")
       val result = route(app = app, request).value
 
-      Then("you will be returned a 406 error response")
+      Then("You will be returned a 406 error response")
       status(result) shouldBe NOT_ACCEPTABLE
       contentAsString(result) shouldBe ""
     }
 
-    scenario("missing X-Client-Id Header") {
-      Given("the platform does not inject a X-Client-Id Header")
+    scenario("Missing X-Client-Id Header") {
+      Given("The platform does not inject a X-Client-Id Header")
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientId))
 
-      When("you call make the 'DELETE' with a NotificationID call to the api-notification-pull service ")
+      When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service ")
       val result = route(app = app, request).value
 
-      Then("you will be returned a 500 error response")
+      Then("You will be returned a 500 error response")
       status(result) shouldBe INTERNAL_SERVER_ERROR
       contentAsString(result) shouldBe ""
     }
