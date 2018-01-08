@@ -36,6 +36,9 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
   private val clientId = "client-id"
   private val xClientIdHeader = "X-Client-ID"
 
+  private val notificationId1 = UUID.randomUUID.toString
+  private val notificationId2 = UUID.randomUUID.toString
+
   private val externalServicesHost = "localhost"
   private val externalServicesPort = 11111
 
@@ -65,7 +68,21 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
 
     scenario("Successful GET and 3rd party receives the notifications locations") {
-      // TODO
+      Given("There are notifications in the API Notification Queue")
+      stubForAllNotifications()
+
+      When("You call making the 'GET' action to the api-notification-pull service")
+      val result = route(app, validRequest).value
+
+      Then("You will receive all notifications for your client id")
+      status(result) shouldBe OK
+
+      // TODO: fix it once we have the XML body formatted in HAL
+      val expectedBody = s"""<notifications><notification>/notification/$notificationId1</notification><notification>/notification/$notificationId2</notification></notifications>"""
+      contentAsString(result).stripMargin shouldBe expectedBody
+
+      And("The notifications will be retrieved")
+      verify(getRequestedFor(urlMatching("/notifications")))
     }
 
     scenario("Missing Accept Header") {
@@ -73,7 +90,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(ACCEPT))
 
       When("You call make the 'GET' call to the api-notification-pull service")
-      val result = route(app = app, request).value
+      val result = route(app, request).value
 
       Then("You will be returned a 406 error response")
       status(result) shouldBe NOT_ACCEPTABLE
@@ -85,7 +102,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientIdHeader))
 
       When("You call make the 'GET' call to the api-notification-pull service ")
-      val result = route(app = app, request).value
+      val result = route(app, request).value
 
       Then("You will be returned a 500 error response")
       status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -98,30 +115,29 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     info("I want to successfully retrieve a notification waiting for me")
     info("So that I can progress my original declaration submission")
 
-    val notificationId = UUID.randomUUID.toString
-    val validRequest = FakeRequest("DELETE", s"/$notificationId").
+    val validRequest = FakeRequest("DELETE", s"/$notificationId1").
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
 
     scenario("Successful DELETE and 3rd party receives the notification") {
-      Given("There is a notification waiting for you in the Notification Queue and you have the correct notification Id")
+      Given("There is a notification waiting in the API Notification Queue and you have the correct notification Id")
       val notificationBody = "<notification>notification</notification>"
-      stubForExistingNotification(notificationId, notificationBody)
+      stubForExistingNotification(notificationId1, notificationBody)
 
       When("You call making the 'DELETE' action to the api-notification-pull service")
-      val result = route(app = app, validRequest).value
+      val result = route(app, validRequest).value
 
       Then("You will receive the notification")
       status(result) shouldBe OK
       contentAsString(result).stripMargin shouldBe notificationBody
 
       And("The notification will be DELETED")
-      verify(deleteRequestedFor(urlMatching(s"/notifications/$notificationId")))
+      verify(deleteRequestedFor(urlMatching(s"/notifications/$notificationId1")))
     }
 
     scenario("3rd party provides notification Id but there are no notifications available or matching the Notification Id") {
       Given("A notification has already been retrieved using the correct notification Id")
 
-      stubFor(get(urlMatching(s"/notifications/$notificationId"))
+      stubFor(get(urlMatching(s"/notifications/$notificationId1"))
         .willReturn(aResponse().withStatus(NOT_FOUND)))
 
       When("You make another call using the same notification Id")
@@ -137,7 +153,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(ACCEPT))
 
       When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service")
-      val result = route(app = app, request).value
+      val result = route(app, request).value
 
       Then("You will be returned a 406 error response")
       status(result) shouldBe NOT_ACCEPTABLE
@@ -149,7 +165,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       val request = validRequest.copyFakeRequest(headers = validRequest.headers.remove(xClientIdHeader))
 
       When("You call make the 'DELETE' call, with a notification Id, to the api-notification-pull service ")
-      val result = route(app = app, request).value
+      val result = route(app, request).value
 
       Then("You will be returned a 500 error response")
       status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -160,11 +176,19 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
   private def stubForExistingNotification(notificationId: String, notificationBody: String) = {
     stubFor(get(urlMatching(s"/notifications/$notificationId"))
       .willReturn(aResponse()
-        .withBody(notificationBody)
-        .withStatus(OK)))
+        .withStatus(OK)
+        .withBody(notificationBody)))
 
     stubFor(delete(urlMatching(s"/notifications/$notificationId"))
-      .willReturn(aResponse()
-        .withStatus(OK)))
+      .willReturn(aResponse().withStatus(OK)))
   }
+
+  private def stubForAllNotifications() = {
+    stubFor(get(urlMatching("/notifications"))
+      .willReturn(aResponse()
+        .withStatus(OK)
+        .withBody(s"""{"notifications":["/notification/$notificationId1","/notification/$notificationId2"]}""")
+      ))
+  }
+
 }
