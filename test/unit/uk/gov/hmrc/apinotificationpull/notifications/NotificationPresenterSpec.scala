@@ -17,11 +17,11 @@
 package uk.gov.hmrc.apinotificationpull.notifications
 
 import akka.stream.Materializer
-import play.api.http.Status._
 import play.api.http.HeaderNames.CONTENT_TYPE
+import play.api.http.Status._
+import play.api.http.ContentTypes.XML
 import uk.gov.hmrc.apinotificationpull.model.Notification
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.txt
 
 class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
   private implicit val materializer: Materializer = fakeApplication.materializer
@@ -42,7 +42,7 @@ class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
          val presenter = new NotificationPresenter
          val notificationId = "notificationId"
 
-         val result = presenter.present(notificationId, Some(Notification(notificationId, Map(CONTENT_TYPE -> "application/xml"), "Notification")))
+         val result = presenter.present(notificationId, Some(Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")))
 
          status(result) shouldBe OK
        }
@@ -50,7 +50,7 @@ class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
        "return notification payload in body" in {
          val presenter = new NotificationPresenter
          val notificationId = "NotificationId"
-         val notification = Notification(notificationId, Map(CONTENT_TYPE -> "application/xml"), "Notification")
+         val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")
 
          val result = await(presenter.present(notificationId, Some(notification)))
 
