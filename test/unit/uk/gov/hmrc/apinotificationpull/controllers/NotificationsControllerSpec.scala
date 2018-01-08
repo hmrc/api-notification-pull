@@ -64,38 +64,19 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
     val validRequest = FakeRequest("DELETE", s"/$notificationId").
       withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
 
-
     val presentedNotificaiton = Ok("presented notification")
+    val headers = Map(CONTENT_TYPE -> "application+xml")
+    val notification = Notification(notificationId, headers, "notification")
 
-    trait ExistingNotification {
-      protected val headers = Map(CONTENT_TYPE -> "application+xml")
-      protected val notification = Notification(notificationId, headers, "notification")
-      when(notificationQueueConnector.getById(meq(notificationId))(any[HeaderCarrier])).thenReturn(Some(notification))
-      when(notificationQueueConnector.delete(meq(notification))(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(OK)))
+    "return the presented notification" in {
+      when(mockApiNotificationQueueService.getAndRemoveNotification(meq(notificationId))(any[HeaderCarrier]))
+        .thenReturn(Some(notification))
+
       when(notificationPresenter.present(notificationId, Some(notification))).thenReturn(presentedNotificaiton)
-    }
 
-    trait NoNotification {
-      when(notificationQueueConnector.getById(meq(notificationId))(any[HeaderCarrier])).thenReturn(None)
-      when(notificationPresenter.present(meq(notificationId), meq(None))).thenReturn(presentedNotificaiton)
-    }
-
-    "return the presented notification" in new ExistingNotification {
       val result = await(controller.delete(notificationId).apply(validRequest))
 
       result shouldBe presentedNotificaiton
-    }
-
-    "delete the notification" in new ExistingNotification {
-      await(controller.delete(notificationId).apply(validRequest))
-
-      verify(notificationQueueConnector).delete(meq(notification))(any[HeaderCarrier])
-    }
-
-    "not delete the notification if it doesn't exist" in new NoNotification {
-      await(controller.delete(notificationId).apply(validRequest))
-
-      verify(notificationQueueConnector, never()).delete(any[Notification])(any[HeaderCarrier])
     }
   }
 

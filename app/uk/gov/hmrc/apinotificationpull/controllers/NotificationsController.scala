@@ -19,19 +19,17 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
-import play.api.mvc.{AnyContent, Action, Result}
-import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
-import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
-import uk.gov.hmrc.apinotificationpull.model.Notification
+import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
 import uk.gov.hmrc.apinotificationpull.notifications.NotificationPresenter
+import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder.toXml
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 @Singleton
 class NotificationsController @Inject()(apiNotificationQueueService: ApiNotificationQueueService,
@@ -51,18 +49,8 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
   def delete(notificationId: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
-    apiNotificationQueueConnector.getById(notificationId)
-      .map(notification => {
-        removeFromQueue(notification)
-        notificationPresenter.present(notificationId, notification)
-      })
-  }
-
-  private def removeFromQueue(notification: Option[Notification])(implicit hc: HeaderCarrier) ={
-    notification match {
-      case Some(notification) => apiNotificationQueueConnector.delete(notification)
-      case None => Future.successful()
-    }
+    apiNotificationQueueService.getAndRemoveNotification(notificationId)
+      .map(n => notificationPresenter.present(notificationId, n))
   }
 
   def getAll: Action[AnyContent] =

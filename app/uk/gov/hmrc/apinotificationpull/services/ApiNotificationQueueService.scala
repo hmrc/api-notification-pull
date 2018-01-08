@@ -19,10 +19,11 @@ package uk.gov.hmrc.apinotificationpull.services
 import javax.inject.Inject
 
 import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
-import uk.gov.hmrc.apinotificationpull.model.Notifications
+import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNotificationQueueConnector) {
 
@@ -30,4 +31,18 @@ class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNo
     apiNotificationQueueConnector.getNotifications()
   }
 
+  def getAndRemoveNotification(notificationId: String)(implicit hc: HeaderCarrier): Future[Option[Notification]] = {
+    val notification = apiNotificationQueueConnector.getById(notificationId)
+    notification.flatMap(notification => {
+      removeFromQueue(notification)
+    })
+    notification
+  }
+
+  private def removeFromQueue(notification: Option[Notification])(implicit hc: HeaderCarrier) ={
+    notification match {
+      case Some(n) => apiNotificationQueueConnector.delete(n)
+      case None => Future.successful()
+    }
+  }
 }

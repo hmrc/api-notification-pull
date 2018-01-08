@@ -16,11 +16,15 @@
 
 package uk.gov.hmrc.apinotificationpull.services
 
+import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import play.api.http.HeaderNames.CONTENT_TYPE
+import play.api.http.ContentTypes.XML
+import play.api.http.Status.OK
 import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
-import uk.gov.hmrc.apinotificationpull.model.Notifications
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -32,8 +36,8 @@ class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar {
   private val notifications = Notifications(List("/notification/123", "/notification/456"))
 
   trait Setup {
-    val mockApiNotificationQueueConnector = mock[ApiNotificationQueueConnector]
-    val apiNotificationQueueService = new ApiNotificationQueueService(mockApiNotificationQueueConnector)
+    val mockApiNotificationQueueConnector: ApiNotificationQueueConnector = mock[ApiNotificationQueueConnector]
+    val apiNotificationQueueService: ApiNotificationQueueService = new ApiNotificationQueueService(mockApiNotificationQueueConnector)
   }
 
   "getNotifications" should {
@@ -46,4 +50,43 @@ class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar {
 
   }
 
+  "getAndRemoveNotification(notificationId: String)" when {
+
+    "the notification exists" should {
+      trait GetAndRemoveExistingNotification extends Setup {
+        val notificationId: String = "notificationId"
+        val notification: Notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "notification")
+        when(mockApiNotificationQueueConnector.getById(meq(notificationId))(any[HeaderCarrier])).thenReturn(Some(notification))
+        when(mockApiNotificationQueueConnector.delete(meq(notification))(any[HeaderCarrier])).thenReturn(Future.successful(HttpResponse(OK)))
+
+        val result: Option[Notification] = await(apiNotificationQueueService.getAndRemoveNotification(notificationId)(HeaderCarrier()))
+      }
+
+      "return the notification" in new GetAndRemoveExistingNotification {
+        result shouldBe Some(notification)
+      }
+
+      "delete the notification" in new GetAndRemoveExistingNotification {
+        verify(mockApiNotificationQueueConnector).delete(meq(notification))(any[HeaderCarrier])
+      }
+    }
+
+    "the notification does not exist" should {
+      trait GetAndRemoveNoNotification extends Setup {
+        val notificationId: String = "notificationId"
+        when(mockApiNotificationQueueConnector.getById(meq(notificationId))(any[HeaderCarrier])).thenReturn(None)
+
+        val result: Option[Notification] = await(
+          apiNotificationQueueService.getAndRemoveNotification(notificationId)(HeaderCarrier()))
+      }
+
+      "return None" in new GetAndRemoveNoNotification {
+        result shouldBe None
+      }
+
+      "not delete the notification if it doesn't exist" in new GetAndRemoveNoNotification {
+        verify(mockApiNotificationQueueConnector, never()).delete(any[Notification])(any[HeaderCarrier])
+      }
+    }
+  }
 }
