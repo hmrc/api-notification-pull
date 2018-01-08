@@ -34,9 +34,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class NotificationsController @Inject()(apiNotificationQueueService: ApiNotificationQueueService,
                                         headerValidator: HeaderValidator,
-                                        apiNotificationQueueConnector: ApiNotificationQueueConnector,
                                         notificationPresenter: NotificationPresenter) extends BaseController {
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 

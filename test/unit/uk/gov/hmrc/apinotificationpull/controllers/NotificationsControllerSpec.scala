@@ -19,6 +19,7 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import java.util.UUID
 import java.util.concurrent.TimeoutException
 
+import akka.stream.Materializer
 import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -41,7 +42,7 @@ import scala.util.control.NonFatal
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach{
 
-  implicit val materializer = fakeApplication.materializer
+  implicit val materializer: Materializer = fakeApplication.materializer
   private val xClientIdHeader = "X-Client-ID"
   private val clientId = "client_id"
 
@@ -49,14 +50,13 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
   private val headerValidator = new SuccessfulHeaderValidatorFake
 
   private val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
-  private val notificationQueueConnector = mock[ApiNotificationQueueConnector]
   private val notificationPresenter = mock[NotificationPresenter]
 
-  private val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationQueueConnector, notificationPresenter)
+  private val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(notificationQueueConnector, notificationPresenter, mockApiNotificationQueueService)
+    reset(notificationPresenter, mockApiNotificationQueueService)
   }
 
   "delete notification by id" should {
