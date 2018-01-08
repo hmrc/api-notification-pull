@@ -41,17 +41,20 @@ import scala.xml.{Node, Utility, XML}
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach{
 
-  implicit val materializer: Materializer = fakeApplication.materializer
-  private val xClientIdHeader = "X-Client-ID"
-  private val clientId = "client_id"
-
-  private val validHeaders = Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
-  private val headerValidator = new SuccessfulHeaderValidatorFake
-
   private val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
   private val notificationPresenter = mock[NotificationPresenter]
 
-  private val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter)
+  trait Setup {
+    implicit val materializer: Materializer = fakeApplication.materializer
+    val xClientIdHeader = "X-Client-ID"
+    val clientId = "client_id"
+
+    val validHeaders = Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
+    val headerValidator = new SuccessfulHeaderValidatorFake
+
+    val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter)
+
+  }
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -59,7 +62,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
   }
 
   "delete notification by id" should {
-    trait SetupDeleteNotification {
+    trait SetupDeleteNotification extends Setup {
       val notificationId = UUID.randomUUID().toString
       val validRequest = FakeRequest("DELETE", s"/$notificationId").
         withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
@@ -83,17 +86,16 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   "get all notifications" should {
 
-    trait Setup {
+    trait SetupGetAllNotifications extends Setup {
       protected val notificationId1: UUID = UUID.randomUUID()
       protected val notificationId2: UUID = UUID.randomUUID()
 
       protected val notifications = Notifications(List(s"/notification/$notificationId1", s"/notification/$notificationId2"))
+
+      val validRequest = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
     }
 
-
-    val validRequest = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
-
-    "return all notifications" in new Setup {
+    "return all notifications" in new SetupGetAllNotifications {
       when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
         .thenReturn(Future.successful(notifications))
 
@@ -105,7 +107,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
       bodyOf(result) shouldBe expectedXml
     }
 
-    "fail if ApiNotificationQueueService failed" in new Setup {
+    "fail if ApiNotificationQueueService failed" in new SetupGetAllNotifications {
       when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
         .thenReturn(Future.failed(new TimeoutException()))
 
