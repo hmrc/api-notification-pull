@@ -24,8 +24,9 @@ import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.http.HeaderNames._
-import play.api.http.Status._
+import play.api.http.HeaderNames.{ACCEPT, CONTENT_TYPE}
+import play.api.http.MimeTypes
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import uk.gov.hmrc.apinotificationpull.fakes.SuccessfulHeaderValidatorFake
@@ -53,7 +54,6 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
     val headerValidator = new SuccessfulHeaderValidatorFake
 
     val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter)
-
   }
 
   override def beforeEach(): Unit = {
@@ -68,7 +68,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
         withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
 
       val presentedNotification = Ok("presented notification")
-      val headers = Map(CONTENT_TYPE -> "application+xml")
+      val headers = Map(CONTENT_TYPE -> MimeTypes.XML)
       val notification = Notification(notificationId, headers, "notification")
     }
 
