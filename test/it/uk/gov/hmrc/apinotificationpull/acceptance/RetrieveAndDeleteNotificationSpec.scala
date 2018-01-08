@@ -28,7 +28,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
 
   feature("Retrieve(DELETE) a single message from the API Notification Pull service") {
     info("As a 3rd Party")
-    info("I want to successfully receive all notifications waiting for me")
+    info("I want to successfully retrieve a notification waiting for me")
     info("So that I can progress my original declaration submission")
 
     val notificationId = UUID.randomUUID()
