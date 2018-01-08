@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Result}
-import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
 import uk.gov.hmrc.apinotificationpull.notifications.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
