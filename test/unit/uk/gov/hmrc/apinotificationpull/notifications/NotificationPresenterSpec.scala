@@ -28,32 +28,34 @@ class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
 
    "present" when {
      "no notification" should {
-       "return NOT_FOUND" in {
+       trait PresentNoNotification {
          val presenter = new NotificationPresenter
-
          val result = presenter.present("NotificationId", None)
+       }
 
+       "return NOT_FOUND" in new PresentNoNotification {
          status(result) shouldBe NOT_FOUND
+       }
+
+       "return empty body" in new PresentNoNotification {
+         bodyOf(result) shouldBe "NOT FOUND"
        }
      }
 
      "notificationExists" should {
-       "return OK" in {
+       trait PresentSomeNotification {
          val presenter = new NotificationPresenter
          val notificationId = "notificationId"
+         val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")
 
-         val result = presenter.present(notificationId, Some(Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")))
+         val result = presenter.present(notificationId, Some(notification))
+       }
 
+       "return OK" in new PresentSomeNotification {
          status(result) shouldBe OK
        }
 
-       "return notification payload in body" in {
-         val presenter = new NotificationPresenter
-         val notificationId = "NotificationId"
-         val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")
-
-         val result = await(presenter.present(notificationId, Some(notification)))
-
+       "return notification payload in body" in new PresentSomeNotification {
          bodyOf(result) shouldBe notification.payload
        }
      }
