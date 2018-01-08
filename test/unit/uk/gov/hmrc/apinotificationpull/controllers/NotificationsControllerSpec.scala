@@ -64,7 +64,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
       val validRequest = FakeRequest("DELETE", s"/$notificationId").
         withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
 
-      val presentedNotificaiton = Ok("presented notification")
+      val presentedNotification = Ok("presented notification")
       val headers = Map(CONTENT_TYPE -> "application+xml")
       val notification = Notification(notificationId, headers, "notification")
     }
@@ -73,11 +73,11 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
       when(mockApiNotificationQueueService.getAndRemoveNotification(meq(notificationId))(any[HeaderCarrier]))
         .thenReturn(Some(notification))
 
-      when(notificationPresenter.present(notificationId, Some(notification))).thenReturn(presentedNotificaiton)
+      when(notificationPresenter.present(notificationId, Some(notification))).thenReturn(presentedNotification)
 
       val result = await(controller.delete(notificationId).apply(validRequest))
 
-      result shouldBe presentedNotificaiton
+      result shouldBe presentedNotification
     }
   }
 
