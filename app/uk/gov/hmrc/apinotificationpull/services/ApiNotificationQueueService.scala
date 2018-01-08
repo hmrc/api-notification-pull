@@ -39,7 +39,7 @@ class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNo
     notification
   }
 
-  private def removeFromQueue(notification: Option[Notification])(implicit hc: HeaderCarrier) ={
+  private def removeFromQueue(notification: Option[Notification])(implicit hc: HeaderCarrier) = {
     notification match {
       case Some(n) => apiNotificationQueueConnector.delete(n)
       case None => Future.successful()
