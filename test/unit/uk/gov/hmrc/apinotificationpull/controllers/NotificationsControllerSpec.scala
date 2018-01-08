@@ -31,7 +31,7 @@ import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import uk.gov.hmrc.apinotificationpull.fakes.SuccessfulHeaderValidatorFake
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
-import uk.gov.hmrc.apinotificationpull.notifications.NotificationPresenter
+import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
