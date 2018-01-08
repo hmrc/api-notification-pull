@@ -5,7 +5,7 @@
     {
       "key": "@apiScopeKey",
       "name": "API Notification Pull",
-      "description": "Pull notifications"
+      "description": "Pull notificationzs"
     }
   ],
   "api": {
