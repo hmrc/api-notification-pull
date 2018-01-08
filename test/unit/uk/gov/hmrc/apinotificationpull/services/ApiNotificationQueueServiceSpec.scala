@@ -19,6 +19,7 @@ package uk.gov.hmrc.apinotificationpull.services
 import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatest.concurrent.Eventually
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.ContentTypes.XML
 import play.api.http.Status.OK
@@ -27,9 +28,10 @@ import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
+
 import scala.concurrent.Future
 
-class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar {
+class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar with Eventually {
 
   private val hc = HeaderCarrier()
 
@@ -67,7 +69,7 @@ class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar {
       }
 
       "delete the notification" in new GetAndRemoveExistingNotification {
-        verify(mockApiNotificationQueueConnector).delete(meq(notification))(any[HeaderCarrier])
+        eventually(verify(mockApiNotificationQueueConnector).delete(meq(notification))(any[HeaderCarrier]))
       }
     }
 
