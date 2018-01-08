@@ -33,14 +33,18 @@ class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNo
 
   def getAndRemoveNotification(notificationId: String)(implicit hc: HeaderCarrier): Future[Option[Notification]] = {
     val notification = apiNotificationQueueConnector.getById(notificationId)
+
     notification.map(n => {
       removeFromQueue(n)
     })
 
-    notification.map(n => n)
+    notification
   }
 
   private def removeFromQueue(notification: Option[Notification])(implicit hc: HeaderCarrier): Unit = {
-    notification.foreach(n => apiNotificationQueueConnector.delete(n))
+    notification match {
+      case Some(n) => apiNotificationQueueConnector.delete(n)
+      case _ => ()
+    }
   }
 }

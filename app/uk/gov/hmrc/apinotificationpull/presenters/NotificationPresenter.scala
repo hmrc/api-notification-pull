@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.notifications
+package uk.gov.hmrc.apinotificationpull.presenters
 
 import akka.util.ByteString
 import play.api.http.HeaderNames.CONTENT_TYPE
