@@ -25,7 +25,7 @@ import play.api.mvc.{ResponseHeader, Result}
 import uk.gov.hmrc.apinotificationpull.model.Notification
 
 class NotificationPresenter {
-  def present(notificationId: String, notification: Option[Notification]): Result = {
+  def present(notification: Option[Notification]): Result = {
     notification.fold(NotFound("NOT FOUND"))(
       n => Result(
         header = ResponseHeader(OK),

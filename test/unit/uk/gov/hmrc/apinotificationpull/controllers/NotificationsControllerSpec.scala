@@ -76,7 +76,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
       when(mockApiNotificationQueueService.getAndRemoveNotification(meq(notificationId))(any[HeaderCarrier]))
         .thenReturn(Some(notification))
 
-      when(notificationPresenter.present(notificationId, Some(notification))).thenReturn(presentedNotification)
+      when(notificationPresenter.present(Some(notification))).thenReturn(presentedNotification)
 
       val result = await(controller.delete(notificationId).apply(validRequest))
 

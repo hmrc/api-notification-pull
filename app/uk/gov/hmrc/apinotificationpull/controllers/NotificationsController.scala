@@ -48,7 +48,7 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
     apiNotificationQueueService.getAndRemoveNotification(notificationId)
-      .map(n => notificationPresenter.present(notificationId, n))
+      .map(n => notificationPresenter.present(n))
   }
 
   def getAll: Action[AnyContent] =

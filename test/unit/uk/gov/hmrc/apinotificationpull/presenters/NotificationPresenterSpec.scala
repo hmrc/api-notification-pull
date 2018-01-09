@@ -30,7 +30,7 @@ class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
      "no notification" should {
        trait PresentNoNotification {
          val presenter = new NotificationPresenter
-         val result = presenter.present("NotificationId", None)
+         val result = presenter.present(None)
        }
 
        "return NOT_FOUND" in new PresentNoNotification {
@@ -48,7 +48,7 @@ class NotificationPresenterSpec extends UnitSpec with WithFakeApplication {
          val notificationId = "notificationId"
          val notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "Notification")
 
-         val result = presenter.present(notificationId, Some(notification))
+         val result = presenter.present(Some(notification))
        }
 
        "return OK" in new PresentSomeNotification {
