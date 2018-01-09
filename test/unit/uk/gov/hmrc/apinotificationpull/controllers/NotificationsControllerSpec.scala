@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.apinotificationpull.controllers
 
-import java.util.UUID
 import java.util.concurrent.TimeoutException
 
 import akka.stream.Materializer
@@ -40,15 +39,21 @@ import scala.concurrent.Future
 import scala.util.control.NonFatal
 import scala.xml.{Node, Utility, XML}
 
-class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach{
+class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach {
+
+  private val notificationId1 = 1234
+  private val notificationId2 = 6789
+
+  private val notifications = Notifications(List(s"/notifications/$notificationId1", s"/notifications/$notificationId2"))
+
+  private val xClientIdHeader = "X-Client-ID"
+  private val clientId = "client_id"
 
   private val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
   private val notificationPresenter = mock[NotificationPresenter]
 
   trait Setup {
     implicit val materializer: Materializer = fakeApplication.materializer
-    val xClientIdHeader = "X-Client-ID"
-    val clientId = "client_id"
 
     val validHeaders = Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
     val headerValidator = new SuccessfulHeaderValidatorFake
@@ -103,8 +108,15 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
       status(result) shouldBe OK
 
-      val expectedXml = s"<notifications><notification>/notification/$notificationId1</notification><notification>/notification/$notificationId2</notification></notifications>"
-      bodyOf(result) shouldBe expectedXml
+      val expectedXml = scala.xml.Utility.trim(
+        <resource href="/notifications/">
+          <link rel="self" href="/notifications/"/>
+          <link rel="notification" href="/notifications/1234"/>
+          <link rel="notification" href="/notifications/6789"/>
+        </resource>
+      )
+
+      string2xml(bodyOf(result)) shouldBe expectedXml
     }
 
     "fail if ApiNotificationQueueService failed" in new SetupGetAllNotifications {
@@ -124,7 +136,9 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
               <description>An unexpected error occurred</description>
             </error>
           </errors>
-        </error_response>)
+        </error_response>
+      )
+
       string2xml(bodyOf(result)) shouldBe expectedXml
     }
   }
@@ -133,8 +147,9 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
     val xml = try {
       XML.loadString(s)
     } catch {
-      case NonFatal(thr) => fail("Not an xml: " + s, thr)
+      case NonFatal(t) => fail("Not an XML: " + s, t)
     }
+
     Utility.trim(xml)
   }
 
