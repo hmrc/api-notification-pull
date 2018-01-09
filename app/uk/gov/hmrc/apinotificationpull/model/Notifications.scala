@@ -24,7 +24,7 @@ object Notifications {
   implicit val notificationsJF = Json.format[Notifications]
 }
 
-case class Notification(id: String,headers: Map[String, String], payload: String)
+case class Notification(id: String, headers: Map[String, String], payload: String)
 
 object XmlErrorResponse {
   def apply(message: String) =
