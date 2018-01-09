@@ -24,6 +24,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.{status => wmStatus, _}
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest.OptionValues._
 import org.scalatest._
+import org.scalatest.concurrent.Eventually
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -31,7 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerTest
-  with BeforeAndAfterEach with BeforeAndAfterAll {
+  with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
 
   private val externalServicesHost = "localhost"
   private val externalServicesPort = 11111
@@ -78,7 +79,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       contentAsString(result).stripMargin shouldBe notificationBody
 
       And("The notification will be DELETED")
-      verify(deleteRequestedFor(urlMatching(s"/notifications/$notificationId")))
+      verify(eventually(deleteRequestedFor(urlMatching(s"/notifications/$notificationId"))))
     }
 
     scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {
