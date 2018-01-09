@@ -15,7 +15,7 @@ uses:
 /@apiContext/:
   get:
     displayName: Get a list of all available notifications
-    description: Allows retrieval o f a list of notifications waiting to be pulled
+    description: Allows retrieval of a list of notifications waiting to be pulled
     headers:
       Accept:
         description: Specifies the version of the API that you want to call. See [versioning](/api-documentation/docs/reference-guide#versioning).
@@ -31,8 +31,8 @@ uses:
 
 /@apiContext/{id}/:
   delete:
-    displayName: Collect and delete a notification
-    description: Allows collection of individual notifications. The notification will be returned in the response body and deleted.
+    displayName: Retrieve and delete a notification from the api-notification-queue
+    description: Allows retrieval of individual notifications. The notification will be returned in the response body and then deleted from the api-notification-queue.
     headers:
       Accept:
         description: Specifies the version of the API that you want to call. See [versioning](/api-documentation/docs/reference-guide#versioning).
