@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.apinotificationpull.acceptance
 
-import java.util.UUID
-
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{status => wmStatus, _}
@@ -36,8 +34,8 @@ class GetAllNotificationsSpec extends FeatureSpec with GivenWhenThen with Matche
   private val clientId = "client-id"
   private val xClientIdHeader = "X-Client-ID"
 
-  private val notificationId1 = UUID.randomUUID.toString
-  private val notificationId2 = UUID.randomUUID.toString
+  private val notificationId1 = 1234
+  private val notificationId2 = 6789
 
   private val externalServicesHost = "localhost"
   private val externalServicesPort = 11111
@@ -77,9 +75,15 @@ class GetAllNotificationsSpec extends FeatureSpec with GivenWhenThen with Matche
       Then("You will receive all notifications for your client id")
       status(result) shouldBe OK
 
-      // TODO: fix it once we have the XML body formatted in HAL
-      val expectedBody = s"""<notifications><notification>/notification/$notificationId1</notification><notification>/notification/$notificationId2</notification></notifications>"""
-      contentAsString(result).stripMargin shouldBe expectedBody
+      val expectedBody = scala.xml.Utility.trim(
+        <resource href="/notifications/">
+          <link rel="self" href="/notifications/"/>
+          <link rel="notification" href="/notifications/1234"/>
+          <link rel="notification" href="/notifications/6789"/>
+        </resource>
+      )
+
+      contentAsString(result).stripMargin shouldBe expectedBody.toString()
 
       And("The notifications will be retrieved")
       verify(getRequestedFor(urlMatching("/notifications")))
@@ -114,7 +118,7 @@ class GetAllNotificationsSpec extends FeatureSpec with GivenWhenThen with Matche
     stubFor(get(urlMatching("/notifications"))
       .willReturn(aResponse()
         .withStatus(OK)
-        .withBody(s"""{"notifications":["/notification/$notificationId1","/notification/$notificationId2"]}""")
+        .withBody(s"""{"notifications":["/notifications/$notificationId1","/notifications/$notificationId2"]}""")
       ))
   }
 
