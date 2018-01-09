@@ -54,7 +54,7 @@ class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar with Ev
 
   "getAndRemoveNotification(notificationId: String)" when {
 
-    "the notification exists" should {
+    "the notification exists and is successfully retrieved and deleted" should {
       trait GetAndRemoveExistingNotification extends Setup {
         val notificationId: String = "notificationId"
         val notification: Notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "notification")
@@ -70,6 +70,21 @@ class ApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar with Ev
 
       "delete the notification" in new GetAndRemoveExistingNotification {
         eventually(verify(mockApiNotificationQueueConnector).delete(meq(notification))(any[HeaderCarrier]))
+      }
+    }
+
+    "the notification exists, is retrieved and deletion fails" should {
+      trait GetAndFailRemovingExistingNotification extends Setup {
+        val notificationId: String = "notificationId"
+        val notification: Notification = Notification(notificationId, Map(CONTENT_TYPE -> XML), "notification")
+        when(mockApiNotificationQueueConnector.getById(meq(notificationId))(any[HeaderCarrier])).thenReturn(Some(notification))
+        when(mockApiNotificationQueueConnector.delete(meq(notification))(any[HeaderCarrier])).thenThrow(new RuntimeException())
+      }
+
+      "return a failed future" in new GetAndFailRemovingExistingNotification {
+        intercept[RuntimeException] {
+          await(apiNotificationQueueService.getAndRemoveNotification(notificationId)(HeaderCarrier()))
+        }
       }
     }
 

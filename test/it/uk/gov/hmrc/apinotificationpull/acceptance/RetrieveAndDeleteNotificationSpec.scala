@@ -55,7 +55,7 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
     externalServices.stop()
   }
 
-  feature("Retrieve(DELETE) a single message from the API Notification Pull service") {
+  feature("Retrieve(DELETE) a single notification from the API Notification Pull service") {
     info("As a 3rd Party")
     info("I want to successfully retrieve a notification waiting for me")
     info("So that I can progress my original declaration submission")
@@ -82,14 +82,14 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec with GivenWhenThen w
       verify(eventually(deleteRequestedFor(urlMatching(s"/notifications/$notificationId"))))
     }
 
-    scenario("3rd party provides NotificationID but No message available/Matching NotificationID") {
-      Given("A message has already been retrieved using the correct NotificationID")
+    scenario("3rd party provides NotificationID but No notification available/Matching NotificationID") {
+      Given("A notification has already been retrieved using the correct NotificationID")
 
       stubFor(get(urlMatching(s"/notifications/$notificationId"))
         .willReturn(aResponse()
           .withStatus(NOT_FOUND)))
 
-      When("You make another call using the same MessageID")
+      When("You make another call using the same notification Id")
       val result = route(app = app, validRequest).value
 
       Then("You will receive a 404 error response")
