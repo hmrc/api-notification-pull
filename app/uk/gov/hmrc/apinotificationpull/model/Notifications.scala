@@ -18,6 +18,8 @@ package uk.gov.hmrc.apinotificationpull.model
 
 import play.api.libs.json.Json
 
+case class Notification(id: String, headers: Map[String, String], payload: String)
+
 case class Notifications(notifications: List[String])
 
 object Notifications {
