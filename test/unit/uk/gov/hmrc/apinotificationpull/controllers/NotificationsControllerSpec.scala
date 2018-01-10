@@ -44,11 +44,6 @@ import scala.xml.{Node, Utility, XML}
 
 class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach {
 
-  private val notificationId1 = 1234
-  private val notificationId2 = 6789
-
-  private val notifications = Notifications(List(s"/notifications/$notificationId1", s"/notifications/$notificationId2"))
-
   private val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
   private val notificationPresenter = mock[NotificationPresenter]
   private val mockXmlBuilder = mock[XmlBuilder]
@@ -72,8 +67,8 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   "delete notification by id" should {
     trait SetupDeleteNotification extends Setup {
-      val notificationId = UUID.randomUUID().toString
-      val validRequest = FakeRequest("DELETE", s"/$notificationId").
+      val notificationId: String = UUID.randomUUID().toString
+      val validRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("DELETE", s"/$notificationId").
         withHeaders(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> "client-id")
 
       val presentedNotification = Ok("presented notification")
@@ -96,27 +91,25 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
   "get all notifications" should {
 
     trait SetupGetAllNotifications extends Setup {
-      protected val notificationId1: String = "1234"
-      protected val notificationId2: String = "6789"
 
-      protected val notifications = Notifications(List(s"/notifications/$notificationId1", s"/notifications/$notificationId2"))
+      protected val notifications = Notifications(List(s"/notifications/1"))
 
       val validRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
     }
 
     "return all notifications" in new SetupGetAllNotifications {
-      val expectedXml = <resource href="/notifications/"></resource>
+      val xmlNotifications = <resource href="/notifications/"><link rel="notification" href="/notifications/1"/></resource>
 
       when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
         .thenReturn(Future.successful(notifications))
 
-      when(mockXmlBuilder.toXml(notifications)).thenReturn(expectedXml)
+      when(mockXmlBuilder.toXml(notifications)).thenReturn(xmlNotifications)
 
       val result = await(controller.getAll().apply(validRequest))
 
       status(result) shouldBe OK
 
-      string2xml(bodyOf(result)) shouldBe expectedXml
+      string2xml(bodyOf(result)) shouldBe xmlNotifications
     }
 
     "fail if ApiNotificationQueueService failed" in new SetupGetAllNotifications {
