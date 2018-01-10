@@ -126,12 +126,12 @@ class RetrieveAndDeleteNotificationSpec extends FeatureSpec
   }
 
   private def stubForExistingNotification(notificationId: String, notificationBody: String) = {
-    stubFor(get(urlMatching(s"/notification/$notificationId"))
+    stubFor(get(urlMatching(s"/notification/$notificationId")).withHeader(xClientIdHeader, equalTo(clientId))
       .willReturn(aResponse()
         .withBody(notificationBody)
         .withStatus(OK)))
 
-    stubFor(delete(urlMatching(s"/notification/$notificationId"))
+    stubFor(delete(urlMatching(s"/notification/$notificationId")).withHeader(xClientIdHeader, equalTo(clientId))
       .willReturn(aResponse()
         .withStatus(OK)))
   }
