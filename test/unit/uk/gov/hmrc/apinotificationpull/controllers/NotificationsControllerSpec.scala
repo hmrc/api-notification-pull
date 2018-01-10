@@ -27,12 +27,14 @@ import org.scalatest.mockito.MockitoSugar
 import play.api.http.HeaderNames.{ACCEPT, CONTENT_TYPE}
 import play.api.http.MimeTypes
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import uk.gov.hmrc.apinotificationpull.fakes.SuccessfulHeaderValidatorFake
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
+import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -49,6 +51,7 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
   private val mockApiNotificationQueueService = mock[ApiNotificationQueueService]
   private val notificationPresenter = mock[NotificationPresenter]
+  private val mockXmlBuilder = mock[XmlBuilder]
 
   trait Setup {
     implicit val materializer: Materializer = fakeApplication.materializer
@@ -59,12 +62,12 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
     val validHeaders = Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId)
     val headerValidator = new SuccessfulHeaderValidatorFake
 
-    val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter)
+    val controller = new NotificationsController(mockApiNotificationQueueService, headerValidator, notificationPresenter, mockXmlBuilder)
   }
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(notificationPresenter, mockApiNotificationQueueService)
+    reset(notificationPresenter, mockApiNotificationQueueService, mockXmlBuilder)
   }
 
   "delete notification by id" should {
@@ -98,24 +101,20 @@ class NotificationsControllerSpec extends UnitSpec with WithFakeApplication with
 
       protected val notifications = Notifications(List(s"/notifications/$notificationId1", s"/notifications/$notificationId2"))
 
-      val validRequest = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
+      val validRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/").withHeaders(validHeaders: _*)
     }
 
     "return all notifications" in new SetupGetAllNotifications {
+      val expectedXml = <resource href="/notifications/"></resource>
+
       when(mockApiNotificationQueueService.getNotifications()(any(classOf[HeaderCarrier])))
         .thenReturn(Future.successful(notifications))
+
+      when(mockXmlBuilder.toXml(notifications)).thenReturn(expectedXml)
 
       val result = await(controller.getAll().apply(validRequest))
 
       status(result) shouldBe OK
-
-      val expectedXml = scala.xml.Utility.trim(
-        <resource href="/notifications/">
-          <link rel="self" href="/notifications/"/>
-          <link rel="notification" href="/notifications/1234"/>
-          <link rel="notification" href="/notifications/6789"/>
-        </resource>
-      )
 
       string2xml(bodyOf(result)) shouldBe expectedXml
     }
