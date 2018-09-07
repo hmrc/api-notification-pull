@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.controllers
+package unit.controllers
 
 import java.util.UUID
 import java.util.concurrent.TimeoutException
@@ -30,13 +30,14 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
-import uk.gov.hmrc.apinotificationpull.fakes.SuccessfulHeaderValidatorFake
+import uk.gov.hmrc.apinotificationpull.controllers.NotificationsController
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import unit.fakes.SuccessfulHeaderValidatorFake
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal

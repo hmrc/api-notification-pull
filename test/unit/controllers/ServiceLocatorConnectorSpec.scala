@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.controllers
-
+package unit.controllers
 
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.ContentTypes.JSON
+import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.libs.json.Writes
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration

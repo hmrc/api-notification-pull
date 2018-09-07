@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull
+package unit
 
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.apinotificationpull.ApplicationRegistration
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
 import uk.gov.hmrc.apinotificationpull.connectors.ServiceLocatorConnector
 import uk.gov.hmrc.play.test.UnitSpec
