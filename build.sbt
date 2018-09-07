@@ -107,7 +107,7 @@ lazy val commonSettings: Seq[Setting[_]] =
     gitStampSettings
 
 lazy val playSettings: Seq[Setting[_]] = Seq(
-  routesImport ++= Seq("uk.gov.hmrc.customs.api.common.domain._")
+//  routesImport ++= Seq("uk.gov.hmrc.customs.api.common.domain._")
 )
 
 lazy val playPublishingSettings: Seq[sbt.Setting[_]] = sbtrelease.ReleasePlugin.releaseSettings ++
@@ -115,7 +115,7 @@ lazy val playPublishingSettings: Seq[sbt.Setting[_]] = sbtrelease.ReleasePlugin.
   publishAllArtefacts
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
-  coverageExcludedPackages := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;uk.gov.hmrc.BuildInfo;views.*;uk.gov.hmrc.customs.apinotificationpull.config.*",
+  coverageExcludedPackages := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;uk.gov.hmrc.BuildInfo;views.*;uk.gov.hmrc.apinotificationpull.config.*",
   coverageMinimum := 96,
   coverageFailOnMinimum := false,
   coverageHighlighting := true,
