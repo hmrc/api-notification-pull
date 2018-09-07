@@ -26,6 +26,7 @@ import play.api.libs.json.Writes
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
 import uk.gov.hmrc.apinotificationpull.connectors.{Registration, ServiceLocatorConnector}
+import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
@@ -38,6 +39,7 @@ class ServiceLocatorConnectorSpec  extends UnitSpec with MockitoSugar with Scala
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val serviceLocatorException = new RuntimeException
 
+    val mockLogger = mock[CdsLogger]
     val mockHttpClient = mock[HttpClient]
     val mockConfig = mock[ServiceConfiguration]
     val appUrl = "http://api-notification-pull.service"
@@ -53,7 +55,7 @@ class ServiceLocatorConnectorSpec  extends UnitSpec with MockitoSugar with Scala
         serviceUrl
       }
     }
-    val connector: ServiceLocatorConnector = new ServiceLocatorConnector(mockHttpClient, new TestConfig) {
+    val connector: ServiceLocatorConnector = new ServiceLocatorConnector(mockHttpClient, new TestConfig, mockLogger) {
       override val handlerOK: () => Unit = mock[() => Unit]
       override val handlerError: Throwable => Unit = mock[(Throwable) => Unit]
       override val metadata: Option[Map[String, String]] = Some(

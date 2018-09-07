@@ -17,11 +17,10 @@
 package uk.gov.hmrc.apinotificationpull.connectors
 
 import javax.inject.Inject
-
-import play.api.Logger
 import play.api.http.{ContentTypes, HeaderNames}
 import play.api.libs.json.Json
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
+import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -34,14 +33,14 @@ object Registration {
   implicit val regFormat = Json.format[Registration]
 }
 
-class ServiceLocatorConnector @Inject()(http: HttpClient, configuration: ServiceConfiguration) {
+class ServiceLocatorConnector @Inject()(http: HttpClient, configuration: ServiceConfiguration, logger: CdsLogger) {
 
   private lazy val appName: String = configuration.getString("appName")
   private lazy val appUrl: String = configuration.getString("appUrl")
   private lazy val serviceUrl: String = configuration.baseUrl("service-locator")
 
-  val handlerOK: () => Unit = () => Logger.info("Service is registered on the service locator")
-  val handlerError: Throwable => Unit = e => Logger.error("Service could not register on the service locator", e)
+  val handlerOK: () => Unit = () => logger.info("Service is registered on the service locator")
+  val handlerError: Throwable => Unit = e => logger.error("Service could not register on the service locator", e)
   val metadata: Option[Map[String, String]] = Some(Map("third-party-api" -> "true"))
 
   def register(): Future[Boolean] = {
