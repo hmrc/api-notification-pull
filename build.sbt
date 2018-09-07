@@ -107,7 +107,7 @@ lazy val commonSettings: Seq[Setting[_]] =
     gitStampSettings
 
 lazy val playSettings: Seq[Setting[_]] = Seq(
-//  routesImport ++= Seq("uk.gov.hmrc.customs.api.common.domain._")
+  routesImport ++= Seq("uk.gov.hmrc.customs.api.common.domain._")
 )
 
 lazy val playPublishingSettings: Seq[sbt.Setting[_]] = sbtrelease.ReleasePlugin.releaseSettings ++
@@ -124,10 +124,10 @@ lazy val scoverageSettings: Seq[Setting[_]] = Seq(
 
 scalastyleConfig := baseDirectory.value / "project" / "scalastyle-config.xml"
 
-val compileDependencies = Seq(bootStrapPlay)
+val compileDependencies = Seq(bootStrapPlay, customsApiCommon)
 
 val testDependencies = Seq(hmrcTest, scalaTest, pegDown,
-  scalaTestPlusPlay, wireMock, mockito)
+  scalaTestPlusPlay, wireMock, mockito, customsApiCommonTests)
 
 unmanagedResourceDirectories in Compile += baseDirectory.value / "public"
 

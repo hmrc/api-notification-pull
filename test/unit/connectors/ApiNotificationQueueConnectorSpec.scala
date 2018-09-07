@@ -43,7 +43,6 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
 
   private val port = sys.env.getOrElse("WIREMOCK", "11114").toInt
   private val host = "localhost"
-  private val apiNotificationQueueUrl = s"http://$host:$port"
   private val wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
   override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
