@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.acceptance
+package uk.gov.hmrc.apinotificationpull.component
 
 import java.util.UUID
 
