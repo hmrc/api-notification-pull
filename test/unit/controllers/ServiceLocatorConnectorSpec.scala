@@ -16,22 +16,24 @@
 
 package unit.controllers
 
-import org.mockito.ArgumentMatchers.{any, eq => eqs}
+import org.mockito.ArgumentMatchers.{any, eq => ameq}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.ContentTypes.JSON
-import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.libs.json.Writes
-import play.api.{Configuration, Environment}
+import play.api.test.Helpers.{CONTENT_TYPE, OK}
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
-import uk.gov.hmrc.apinotificationpull.connectors.{Registration, ServiceLocatorConnector}
+import uk.gov.hmrc.customs.api.common.config.ServicesConfig
+import uk.gov.hmrc.customs.api.common.connectors.ServiceLocatorConnector
+import uk.gov.hmrc.customs.api.common.domain.Registration
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class ServiceLocatorConnectorSpec  extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -39,84 +41,58 @@ class ServiceLocatorConnectorSpec  extends UnitSpec with MockitoSugar with Scala
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val serviceLocatorException = new RuntimeException
 
-    val mockLogger = mock[CdsLogger]
-    val mockHttpClient = mock[HttpClient]
-    val mockConfig = mock[ServiceConfiguration]
-    val appUrl = "http://api-notification-pull.service"
-    val appName = "api-notification-pull"
+    val mockLogger: CdsLogger = mock[CdsLogger]
+    val mockHttpClient: HttpClient = mock[HttpClient]
+    val mockConfig: ServiceConfiguration = mock[ServiceConfiguration]
+    val APP_URL = "http://api-notification-pull.service"
+    val APP_NAME = "api-notification-pull"
     val serviceUrl = "https://SERVICE_LOCATOR"
-    class TestConfig extends ServiceConfiguration(mock[Configuration],mock[Environment]){
+    val THIRD_PARTY_API = "third-party-api"
+    val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 
-      override def getString(key: String): String = key match {
-        case "appUrl" => appUrl
-        case "appName" => appName
-      }
-      override def baseUrl(serviceName: String): String = {
-        serviceUrl
-      }
-    }
-    val connector: ServiceLocatorConnector = new ServiceLocatorConnector(mockHttpClient, new TestConfig, mockLogger) {
+    lazy val connector: ServiceLocatorConnector = new ServiceLocatorConnector(mockServicesConfig, mockHttpClient) {
+      override val appUrl: String = APP_URL
+      override val appName: String = APP_NAME
+      override val serviceUrl: String = "https://SERVICE-LOCATOR-HOST"
       override val handlerOK: () => Unit = mock[() => Unit]
-      override val handlerError: Throwable => Unit = mock[(Throwable) => Unit]
-      override val metadata: Option[Map[String, String]] = Some(
-        Map("third-party-api" -> "true"))
+      override val handlerError: Throwable => Unit = mock[Throwable => Unit]
+      override val metadata = Some(Map(THIRD_PARTY_API -> true.toString))
     }
   }
 
   "register" should {
     "register the JSON API Definition into the Service Locator" in new Setup {
 
-      val registration =
-        Registration(serviceName = "api-notification-pull",
-          serviceUrl = "http://api-notification-pull.service",
-          metadata = Some(Map("third-party-api" -> "true")))
+      val registration = Registration(serviceName = APP_NAME, serviceUrl = APP_URL,
+        metadata = Some(Map(THIRD_PARTY_API -> "true")))
 
-      when(mockHttpClient.POST(
-        eqs(s"$serviceUrl/registration"),
-        eqs(registration),
-        eqs(Seq(CONTENT_TYPE -> JSON))
-      )(
-        any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[ExecutionContext]
-      ))
-        .thenReturn(Future.successful(HttpResponse(200)))
+      when(mockHttpClient.POST(ameq(s"${connector.serviceUrl}/registration"), ameq(registration), ameq(Seq(CONTENT_TYPE -> JSON)))
+      (any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[MdcLoggingExecutionContext]))
+        .thenReturn(Future.successful(HttpResponse(OK)))
 
-      connector.register.futureValue shouldBe true
-      verify(mockHttpClient).POST(
-        eqs("https://SERVICE_LOCATOR/registration"),
-        eqs(registration),
-        eqs(Seq(CONTENT_TYPE -> JSON))
-      )(
-        any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[ExecutionContext]
-      )
+      await(connector.register) shouldBe true
+
+      verify(mockHttpClient).POST(ameq("https://SERVICE-LOCATOR-HOST/registration"), ameq(registration),
+        ameq(Seq(CONTENT_TYPE -> JSON)))(any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[MdcLoggingExecutionContext])
       verify(connector.handlerOK).apply()
       verify(connector.handlerError, never).apply(serviceLocatorException)
     }
 
     "fail registering in service locator" in new Setup {
 
-      val registration =
-        Registration(serviceName = "api-notification-pull",
-          serviceUrl = "http://api-notification-pull.service",
-          metadata = Some(Map("third-party-api" -> "true")))
-      when(mockHttpClient.POST(
-        eqs(s"$serviceUrl/registration"),
-        eqs(registration),
-        eqs(Seq(CONTENT_TYPE -> JSON))
-      )(
-        any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[ExecutionContext])
-      )
-        .thenReturn(Future.failed(serviceLocatorException))
+      val registration = Registration(serviceName = APP_NAME, serviceUrl = APP_URL,
+        metadata = Some(Map(THIRD_PARTY_API -> "true")))
+      when(mockHttpClient.POST(ameq(s"${connector.serviceUrl}/registration"), ameq(registration), ameq(Seq(CONTENT_TYPE -> JSON)))
+      (any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[MdcLoggingExecutionContext])
+      ).thenReturn(Future.failed(serviceLocatorException))
 
-      connector.register().futureValue shouldBe false
-      verify(mockHttpClient).POST(
-        eqs("https://SERVICE_LOCATOR/registration"),
-        eqs(registration),
-        eqs(Seq(CONTENT_TYPE -> JSON))
-      )(
-        any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[ExecutionContext]
-      )
+      await(connector.register) shouldBe false
+
+      verify(mockHttpClient).POST(ameq("https://SERVICE-LOCATOR-HOST/registration"), ameq(registration),
+        ameq(Seq(CONTENT_TYPE -> JSON)))(any[Writes[Registration]], any[HttpReads[HttpResponse]], any[HeaderCarrier], any[MdcLoggingExecutionContext])
       verify(connector.handlerOK, never).apply()
       verify(connector.handlerError).apply(serviceLocatorException)
     }
+
   }
 }

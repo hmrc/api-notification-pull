@@ -16,14 +16,11 @@
 
 package unit.connectors
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{verify => wverify, _}
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.matching.UrlPattern
-import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.ContentTypes.XML
@@ -37,38 +34,39 @@ import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
 import uk.gov.hmrc.play.test.UnitSpec
+import util.ExternalServicesConfig.{Host, Port}
+import util.WireMockRunner
 
-class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach
-  with GuiceOneAppPerSuite with MockitoSugar with Eventually {
+class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with BeforeAndAfterEach with BeforeAndAfterAll
+  with GuiceOneAppPerSuite with MockitoSugar with Eventually with WireMockRunner {
 
-  private val port = sys.env.getOrElse("WIREMOCK", "11114").toInt
-  private val host = "localhost"
-  private val wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
   override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
-      "microservice.services.api-notification-queue.host" -> host,
-      "microservice.services.api-notification-queue.port" -> port
+      "microservice.services.api-notification-queue.host" -> Host,
+      "microservice.services.api-notification-queue.port" -> Port
     ).overrides(
     bind[HttpClient].to[DefaultHttpClient]
   ).build()
 
-  lazy val connector = app.injector.instanceOf[ApiNotificationQueueConnector]
-
+  lazy val connector: ApiNotificationQueueConnector = app.injector.instanceOf[ApiNotificationQueueConnector]
 
   private val clientId = "client-id"
 
   trait Setup {
 
-    implicit val hc = HeaderCarrier().withExtraHeaders("X-Client-ID" -> clientId)
+    implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("X-Client-ID" -> clientId)
+  }
+
+  override def beforeAll(): Unit = {
+    startMockServer()
   }
 
   override def beforeEach() {
-    wireMockServer.start()
-    WireMock.configureFor(host, port)
+    resetMockServer()
   }
 
-  override def afterEach() {
-    wireMockServer.stop()
+  override def afterAll() {
+    stopMockServer()
   }
 
   "ApiNotificationQueueConnector.getNotifications()" should {
@@ -85,7 +83,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
             .withBody(stringify(toJson(notifications))))
       )
 
-      val result = await(connector.getNotifications())
+      val result: Notifications = await(connector.getNotifications())
 
       result shouldBe notifications
     }
@@ -131,7 +129,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
             aResponse()
               .withStatus(NOT_FOUND)))
 
-        val result = await(connector.getById(notificationId))
+        val result: Option[Notification] = await(connector.getById(notificationId))
 
         result shouldBe None
       }
@@ -150,7 +148,7 @@ class ApiNotificationQueueConnectorSpec extends UnitSpec with ScalaFutures with 
               .withBody(notificationPayload)
               .withHeader(CONTENT_TYPE, XML)))
 
-        val result = await(connector.getById(notificationId)).get
+        val result: Notification = await(connector.getById(notificationId)).get
 
         result.id shouldBe notificationId
         result.payload shouldBe notification.payload

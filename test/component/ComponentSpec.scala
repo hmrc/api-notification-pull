@@ -20,13 +20,14 @@ import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import util.ExternalServicesConfig.{Host, Port}
 
 abstract class ComponentSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerTest
   with BeforeAndAfterEach with BeforeAndAfterAll {
 
   override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure(Map(
     "api.context" -> "notifications",
-    "microservice.services.api-notification-queue.host" -> util.ExternalServicesConfig.Host,
-    "microservice.services.api-notification-queue.port" -> util.ExternalServicesConfig.Port
+    "microservice.services.api-notification-queue.host" -> Host,
+    "microservice.services.api-notification-queue.port" -> Port
   )).build()
 }
