@@ -22,7 +22,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.test.Helpers.OK
 import util.WireMockRunner
 
-trait ExternalServices  extends WireMockRunner {
+trait ExternalServices extends WireMockRunner {
 
   private val notificationId1 = 1234
   private val notificationId2 = 6789

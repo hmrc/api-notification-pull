@@ -24,12 +24,9 @@ import play.api.inject.guice.GuiceApplicationBuilder
 abstract class ComponentSpec extends FeatureSpec with GivenWhenThen with Matchers with GuiceOneAppPerTest
   with BeforeAndAfterEach with BeforeAndAfterAll {
 
-  private val externalServicesHost = "localhost"
-  private val externalServicesPort = 11111
-
   override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure(Map(
     "api.context" -> "notifications",
-    "microservice.services.api-notification-queue.host" -> externalServicesHost,
-    "microservice.services.api-notification-queue.port" -> externalServicesPort
+    "microservice.services.api-notification-queue.host" -> util.ExternalServicesConfig.Host,
+    "microservice.services.api-notification-queue.port" -> util.ExternalServicesConfig.Port
   )).build()
 }

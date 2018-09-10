@@ -3,17 +3,15 @@ import sbt._
 
 object AppDependencies {
 
-  private val customsApiCommonVersion = "1.27.0"
-  private val bootStrapPlayVersion = "1.7.0"
+  private val customsApiCommonVersion = "1.28.0"
   private val hmrcTestVersion = "3.0.0"
   private val scalaTestVersion = "3.0.5"
   private val pegDownVersion = "1.6.0"
   private val mockitoVersion = "2.18.3"
   private val scalaTestPlusPlayVersion = "2.0.1"
-  private val wireMockVersion = "2.17.0"
+  private val wireMockVersion = "2.18.0"
   private val testScope = "test,it"
 
-  val bootStrapPlay = "uk.gov.hmrc" %% "bootstrap-play-25" % bootStrapPlayVersion
   val customsApiCommon = "uk.gov.hmrc" %% "customs-api-common" % customsApiCommonVersion withSources()
 
   val hmrcTest = "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % testScope
