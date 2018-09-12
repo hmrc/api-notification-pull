@@ -2,6 +2,7 @@
 ->         /                          health.Routes
 ->         /                          definition.Routes
 
-->         /                          app.Routes
+DELETE    /:notificationId    @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.delete(notificationId)
+GET       /                   @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.getAll
 
-GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics
+GET       /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics
