@@ -5,3 +5,5 @@ DELETE        /:notificationId        @uk.gov.hmrc.apinotificationpull.controlle
 GET           /                       @uk.gov.hmrc.apinotificationpull.controllers.NotificationsController.getAll
 
 GET           /admin/metrics          @com.kenshoo.play.metrics.MetricsController.metrics
+
+GET           /notifications/read/:notificationId @uk.gov.hmrc.apinotificationpull.controllers.EnhancedReadController.read(notificationId)
