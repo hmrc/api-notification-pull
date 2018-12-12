@@ -19,8 +19,8 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
-import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
-import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
+import uk.gov.hmrc.apinotificationpull.presenters.EnhancedNotificationPresenter
+import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
@@ -30,11 +30,11 @@ import uk.gov.hmrc.play.bootstrap.controller.BaseController
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class NotificationsController @Inject()(apiNotificationQueueService: ApiNotificationQueueService,
-                                        headerValidator: HeaderValidator,
-                                        notificationPresenter: NotificationPresenter,
-                                        xmlBuilder: XmlBuilder,
-                                        logger: CdsLogger) extends BaseController {
+class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueService: EnhancedApiNotificationQueueService,
+                                                headerValidator: HeaderValidator,
+                                                enhancedNotificationPresenter: EnhancedNotificationPresenter,
+                                                xmlBuilder: XmlBuilder,
+                                                logger: CdsLogger) extends BaseController {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -46,27 +46,17 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
       InternalServerError(XmlErrorResponse("An unexpected error occurred"))
   }
 
-  def delete(notificationId: String): Action[AnyContent] =
+  def unread(notificationId: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
     implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
 
-    apiNotificationQueueService.getAndRemoveNotification(notificationId)
-      .map(notificationPresenter.present)
+      enhancedApiNotificationQueueService.getUnreadNotificationById(notificationId)
+      .map(enhancedNotificationPresenter.present)
       .recover(recovery)
   }
 
-  def getAll: Action[AnyContent] =
-    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
-
-      implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
-
-      apiNotificationQueueService.getNotifications().map { notifications =>
-        Ok(xmlBuilder.toXml(notifications)).as(XML)
-      } recover recovery
-  }
-
-  private def buildHeaderCarrier(request: Request[AnyContent]): HeaderCarrier = {
+  private def buildHeaderCarrier(request: Request[AnyContent] ): HeaderCarrier = {
     request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
       case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
       case _ =>
