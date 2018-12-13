@@ -20,6 +20,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
 import uk.gov.hmrc.apinotificationpull.model.Notification
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
@@ -40,5 +41,17 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServiceConfigurati
         case ise => Left(new InternalServerException(ise.getMessage))
       }
   }
-}
 
+  def getReadById(notificationId: String)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
+    http.GET[HttpResponse](s"$serviceBaseUrl/notifications/read/$notificationId")
+      .map { r =>
+        Right(Notification(notificationId, r.allHeaders.map(h => h._1 -> h._2.head), r.body))
+      }
+      .recover {
+        case nfe: NotFoundException => Left(nfe)
+        case bre: BadRequestException => Left(bre)
+        case ise => Left(new InternalServerException(ise.getMessage))
+      }
+  }
+
+}

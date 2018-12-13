@@ -28,4 +28,8 @@ class EnhancedApiNotificationQueueService @Inject()(enhancedApiNotificationQueue
   def getUnreadNotificationById(notificationId: String)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
     enhancedApiNotificationQueueConnector.getUnreadNotificationById(notificationId)
   }
+  def getReadNotification(notificationId: String)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
+    enhancedApiNotificationQueueConnector.getReadById(notificationId)
+  }
+
 }

@@ -56,6 +56,16 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
       .recover(recovery)
   }
 
+  def read(notificationId: String): Action[AnyContent] =
+    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
+
+      implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+
+      enhancedApiNotificationQueueService.getReadNotification(notificationId)
+        .map(r => present(r, notificationId))
+        .recover(recovery)
+    }
+
   private def present(result: Either[HttpException, Notification], notificationId: String): Result = {
     result match {
       case Right(n) => Result(
