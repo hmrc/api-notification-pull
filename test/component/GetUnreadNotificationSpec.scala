@@ -51,14 +51,7 @@ class GetUnreadNotificationSpec extends ComponentSpec with ExternalServices {
     scenario("I want to successfully retrieve a notification by notification id") {
       Given("There is an unread notification in the API Notification Queue")
 
-      val body =
-        """{
-                   |  "id": "notificationId",
-                   |  "headers": {
-                   |    "Content-Type": "application/xml; charset=utf-8"
-                   |  },
-                   |  "payload": "notification"
-                   }""".stripMargin
+      val body = """<notification>some-notification</notification>""".stripMargin
 
       stubForExistingNotification("/notifications/unread", notificationId, body,
         Seq(ACCEPT -> "application/vnd.hmrc.1.0+xml", xClientIdHeader -> clientId))
@@ -69,7 +62,7 @@ class GetUnreadNotificationSpec extends ComponentSpec with ExternalServices {
       Then("I receive the notification")
       status(result) shouldBe OK
 
-      contentAsString(result).stripMargin shouldBe body
+      contentAsString(result).stripMargin shouldBe "<notification>some-notification</notification>"
 
     }
 

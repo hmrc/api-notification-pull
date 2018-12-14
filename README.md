@@ -7,6 +7,45 @@ This API allows third party developers to collect notifications.
 
 ## Endpoints
 
+### GET `/notifications/unread/{notificationId}`
+
+Read an unread notification
+
+Required Headers:
+  - `X-Client-ID`
+  - `Accept`
+
+```
+curl -v -X GET "http://localhost:9649/notifications/unread/{notificationId}" \
+  -H "X-Client-ID: 580e3940-fb35-4421-b7c7-949f64a97870" \
+  -H "Accept: application/vnd.hmrc.1.0+xml"
+```
+
+#### Responses
+##### Success
+```
+200 OK
+ Notification
+```
+
+##### Bad Request
+ ```
+400 Bad Request
+    <errorResponse>
+        <code>BAD_REQUEST</code>
+        <message>Notification has been read</message>
+    </errorResponse>
+```
+
+##### Not Found
+```
+404 Not Found
+    <errorResponse>
+        <code>NOT_FOUND</code>
+        <message>Resource was not found</message>
+    </errorResponse>
+```
+
 ### GET `/notifications/read/{notificationId}`
 
 Re-reads a notification
@@ -22,7 +61,6 @@ curl -v -X GET "http://localhost:9649/notifications/read/{notificationId}" \
 ```
 
 #### Responses
-
 ##### Success
 ```
 200 OK
@@ -35,10 +73,10 @@ Notification
 ```
 400 Bad Request
 
-<errorResponse>
- <code>BAD_REQUEST</code>
- <message>Notification is unread</message>
-</errorResponse>
+    <errorResponse>
+        <code>BAD_REQUEST</code>
+        <message>Notification is unread</message>
+    </errorResponse>
 ```
 
 ##### Not Found
@@ -46,10 +84,10 @@ Notification
 ```
 404 Not Found
 
-<errorResponse> 
- <code>NOT_FOUND</code>
- <message>Resource was not found</message>
-</errorResponse>
+    <errorResponse>
+        <code>NOT_FOUND</code>
+        <message>Resource was not found</message>
+    </errorResponse>
 ```
 
 ### DELETE `/{notificationId}`
