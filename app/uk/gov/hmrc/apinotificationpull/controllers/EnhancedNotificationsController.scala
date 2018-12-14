@@ -20,8 +20,10 @@ import akka.util.ByteString
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
 import play.api.mvc._
+import uk.gov.hmrc.apinotificationpull.model.NotificationStatus
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
+import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.controllers.ErrorResponse.{ErrorInternalServerError, ErrorNotFound, errorBadRequest}
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
@@ -43,15 +45,15 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
   private val badRequestReadText = "Notification is unread"
   private val badRequestUnreadText = "Notification has been read"
 
-  def read(notificationId: String): Action[AnyContent] = get(notificationId, uk.gov.hmrc.apinotificationpull.model.Status.Read, badRequestReadText)
+  def read(notificationId: String): Action[AnyContent] = get(notificationId, Read, badRequestReadText)
 
-  def unread(notificationId: String): Action[AnyContent] = get(notificationId, uk.gov.hmrc.apinotificationpull.model.Status.Unread, badRequestUnreadText)
+  def unread(notificationId: String): Action[AnyContent] = get(notificationId, Unread, badRequestUnreadText)
 
-  private def get(notificationId: String, status: uk.gov.hmrc.apinotificationpull.model.Status.Value, badRequestText: String): Action[AnyContent] =
+  private def get(notificationId: String, notificationStatus: NotificationStatus.Value, badRequestText: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
       implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
-      enhancedApiNotificationQueueService.getNotificationById(notificationId, status)
+      enhancedApiNotificationQueueService.getNotificationBy(notificationId, notificationStatus)
         .map {
           case Right(n) => Result(
             header = ResponseHeader(OK),

@@ -21,7 +21,7 @@ import org.scalatest.concurrent.Eventually
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.apinotificationpull.connectors.EnhancedApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.Notification
-import uk.gov.hmrc.apinotificationpull.model.Status._
+import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -50,7 +50,7 @@ class EnhancedApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar
 
       when(mockEnhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unread)(hc)).thenReturn(Future.successful(Right(notification)))
 
-      val result = await(enhancedApiNotificationQueueService.getNotificationById(notificationId, Unread)(hc))
+      val result = await(enhancedApiNotificationQueueService.getNotificationBy(notificationId, Unread)(hc))
 
       result shouldBe Right(notification)
     }
@@ -62,7 +62,7 @@ class EnhancedApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar
 
       when(mockEnhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Read)(hc)).thenReturn(Future.successful(Right(notification)))
 
-      val result = await(enhancedApiNotificationQueueService.getNotificationById(notificationId, Read)(hc))
+      val result = await(enhancedApiNotificationQueueService.getNotificationBy(notificationId, Read)(hc))
 
       result shouldBe Right(notification)
     }

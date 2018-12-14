@@ -25,7 +25,7 @@ import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
 import uk.gov.hmrc.apinotificationpull.connectors.EnhancedApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.Notification
 import uk.gov.hmrc.http.{NotFoundException, _}
-import uk.gov.hmrc.apinotificationpull.model.Status._
+import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -34,9 +34,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with Eventually {
 
   trait Setup {
-
-    val unReadStatus = "unread"
-    val readStatus = "read"
 
     val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
     val clientId = "client-id"

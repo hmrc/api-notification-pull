@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apinotificationpull.connectors
 
 import javax.inject.Inject
-import uk.gov.hmrc.apinotificationpull.model.Status
+import uk.gov.hmrc.apinotificationpull.model.NotificationStatus
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
 import uk.gov.hmrc.apinotificationpull.model.Notification
 import uk.gov.hmrc.http._
@@ -31,9 +31,9 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServiceConfigurati
 
   private lazy val serviceBaseUrl: String = config.baseUrl("api-notification-queue")
 
-  def getNotificationBy(notificationId: String, status: Status.Value)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
+  def getNotificationBy(notificationId: String, notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
 
-    http.GET[HttpResponse](s"$serviceBaseUrl/notifications/${status.toString}/$notificationId")
+    http.GET[HttpResponse](s"$serviceBaseUrl/notifications/${notificationStatus.toString}/$notificationId")
       .map { r =>
         Right(Notification(notificationId, r.allHeaders.map(h => h._1 -> h._2.head), r.body))
       }
