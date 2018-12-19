@@ -68,7 +68,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       result shouldBe notifications
     }
 
-    "return a list of pulled notification" in new Setup {
+    "return a list of previously pulled notification" in new Setup {
 
       when(mockHttpClient.GET[Notifications](meq(s"http://api-notification-queue.url/notifications/pulled"))
         (any[HttpReads[Notifications]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(notifications))
@@ -88,7 +88,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       result shouldBe Right(notification)
     }
 
-    "return the pulled notification for the specified notification id" in new Setup {
+    "return the previously pulled notification for the specified notification id" in new Setup {
 
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/pulled/$notificationId"))
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(mockHttpResponse))
@@ -145,7 +145,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       result shouldBe Notifications(List())
     }
 
-    "return an empty list of pulled notifications when the downstream returns an empty list" in new Setup {
+    "return an empty list of previously pulled notifications when the downstream returns an empty list" in new Setup {
 
       when(mockHttpClient.GET[Notifications](meq(s"http://api-notification-queue.url/notifications/pulled"))
         (any[HttpReads[Notifications]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(Notifications(List())))
