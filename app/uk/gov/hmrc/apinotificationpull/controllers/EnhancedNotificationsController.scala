@@ -47,7 +47,22 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
 
   def pulled(notificationId: String): Action[AnyContent] = get(notificationId, Pulled, badRequestPulledText)
 
+  def pulledList(): Action[AnyContent] = getList(Pulled)
+
   def unpulled(notificationId: String): Action[AnyContent] = get(notificationId, Unpulled, badRequestUnpulledText)
+
+  def unpulledList(): Action[AnyContent] = getList(Unpulled)
+
+  private def getList(notificationStatus: NotificationStatus.Value): Action[AnyContent] =
+  (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
+
+    implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+
+    val eventualNotifications = enhancedApiNotificationQueueService.getAllNotificationsBy(notificationStatus)
+    eventualNotifications.map { notifications =>
+        Ok(xmlBuilder.toXml(notifications)).as(XML)
+    } recover recovery
+  }
 
   private def get(notificationId: String, notificationStatus: NotificationStatus.Value, badRequestText: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
