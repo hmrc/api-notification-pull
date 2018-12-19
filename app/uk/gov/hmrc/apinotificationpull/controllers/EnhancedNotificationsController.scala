@@ -22,7 +22,7 @@ import play.api.http.HttpEntity
 import play.api.mvc._
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
-import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
+import uk.gov.hmrc.apinotificationpull.util.EnhancedXmlBuilder
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.controllers.ErrorResponse.{ErrorInternalServerError, ErrorNotFound, errorBadRequest}
@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueService: EnhancedApiNotificationQueueService,
                                                 headerValidator: HeaderValidator,
-                                                xmlBuilder: XmlBuilder,
+                                                enhancedXmlBuilder: EnhancedXmlBuilder,
                                                 logger: CdsLogger) extends BaseController {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -58,9 +58,8 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
 
     implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
 
-    val eventualNotifications = enhancedApiNotificationQueueService.getAllNotificationsBy(notificationStatus)
-    eventualNotifications.map { notifications =>
-        Ok(xmlBuilder.toXml(notifications)).as(XML)
+    enhancedApiNotificationQueueService.getAllNotificationsBy(notificationStatus).map { notifications =>
+        Ok(enhancedXmlBuilder.toXml(notifications, notificationStatus)).as(XML)
     } recover recovery
   }
 

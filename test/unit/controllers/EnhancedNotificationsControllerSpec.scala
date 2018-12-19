@@ -32,7 +32,7 @@ import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.apinotificationpull.controllers.EnhancedNotificationsController
 import uk.gov.hmrc.apinotificationpull.model.{Notification, NotificationStatus, Notifications}
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
-import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
+import uk.gov.hmrc.apinotificationpull.util.EnhancedXmlBuilder
 import uk.gov.hmrc.customs.api.common.config.ServicesConfig
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -46,7 +46,7 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
 
   private val mockEnhancedApiNotificationQueueService = mock[EnhancedApiNotificationQueueService]
   private val mockAppContext: AppContext = mock[AppContext]
-  private val xmlBuilder = new XmlBuilder(mockAppContext)
+  private val xmlBuilder = new EnhancedXmlBuilder(mockAppContext)
   private val mockLogger = new StubCdsLogger(mock[ServicesConfig])
 
   private val errorNotFoundXml = scala.xml.Utility.trim(
@@ -108,10 +108,10 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
       status(result) shouldBe OK
 
       private val expectedXml = scala.xml.Utility.trim(
-        <resource href="/notifications/">
-          <link rel="self" href="/notifications/"/>
-          <link rel="notification" href="/api-notification-pull-context/notification-unpulled-1"/>
-          <link rel="notification" href="/api-notification-pull-context/notification-unpulled-2"/>
+        <resource href="/notifications/unpulled/">
+          <link rel="self" href="/notifications/unpulled/"/>
+          <link rel="notification" href="/api-notification-pull-context/unpulled/notification-unpulled-1"/>
+          <link rel="notification" href="/api-notification-pull-context/unpulled/notification-unpulled-2"/>
         </resource>
       )
 
@@ -128,10 +128,10 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
       status(result) shouldBe OK
 
       private val expectedXml = scala.xml.Utility.trim(
-        <resource href="/notifications/">
-          <link rel="self" href="/notifications/"/>
-          <link rel="notification" href="/api-notification-pull-context/notification-pulled-1"/>
-          <link rel="notification" href="/api-notification-pull-context/notification-pulled-2"/>
+        <resource href="/notifications/pulled/">
+          <link rel="self" href="/notifications/pulled/"/>
+          <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-1"/>
+          <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-2"/>
         </resource>
       )
 

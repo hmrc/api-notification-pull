@@ -65,10 +65,10 @@ class GetPulledNotificationSpec extends ComponentSpec with ExternalServices {
       status(result) shouldBe OK
 
       val expectedXml = scala.xml.Utility.trim(
-        <resource href="/notifications/">
-          <link rel="self" href="/notifications/"/>
-          <link rel="notification" href="/notifications/notification1"/>
-          <link rel="notification" href="/notifications/notification2"/>
+        <resource href="/notifications/pulled/">
+          <link rel="self" href="/notifications/pulled/"/>
+          <link rel="notification" href="/notifications/pulled/notification1"/>
+          <link rel="notification" href="/notifications/pulled/notification2"/>
         </resource>
       )
 
@@ -91,8 +91,8 @@ class GetPulledNotificationSpec extends ComponentSpec with ExternalServices {
       status(result) shouldBe OK
 
       val expectedXml = scala.xml.Utility.trim(
-        <resource href="/notifications/">
-          <link rel="self" href="/notifications/"/>
+        <resource href="/notifications/pulled/">
+          <link rel="self" href="/notifications/pulled/"/>
         </resource>
       )
 

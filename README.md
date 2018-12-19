@@ -25,9 +25,9 @@ curl -v -X GET "http://localhost:9649/notifications/unpulled" \
 ##### Success
 ```
 200 OK
- <resource href="/notifications/">
-    <link rel="self" href="/notifications/"/>
-    <link rel="notification" href="/notifications/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+ <resource href="/notifications/unpulled/">
+    <link rel="self" href="/notifications/unpulled/"/>
+    <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
  </resource>
 ```
 
@@ -88,9 +88,9 @@ curl -v -X GET "http://localhost:9649/notifications/pulled" \
 ##### Success
 ```
 200 OK
- <resource href="/notifications/">
-    <link rel="self" href="/notifications/"/>
-    <link rel="notification" href="/notifications/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+ <resource href="/notifications/pulled/">
+    <link rel="self" href="/notifications/pulled/"/>
+    <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
  </resource>
 ```
 
