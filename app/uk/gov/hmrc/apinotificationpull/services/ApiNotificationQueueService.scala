@@ -18,12 +18,12 @@ package uk.gov.hmrc.apinotificationpull.services
 
 import javax.inject.Inject
 
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class ApiNotificationQueueService @Inject()(apiNotificationQueueConnector: ApiNotificationQueueConnector) {
 
