@@ -19,6 +19,7 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
 import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
 import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
@@ -36,8 +37,6 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
                                         logger: CdsLogger) extends BaseController {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  private val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 
   private def recovery: PartialFunction[Throwable, Result] = {
     case e =>

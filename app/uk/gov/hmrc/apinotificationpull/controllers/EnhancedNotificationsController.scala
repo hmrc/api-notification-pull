@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.EnhancedXmlBuilder
@@ -38,8 +39,6 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
                                                 logger: CdsLogger) extends BaseController {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  private val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 
   private val badRequestPulledText = "Notification is unpulled"
   private val badRequestUnpulledText = "Notification has been pulled"

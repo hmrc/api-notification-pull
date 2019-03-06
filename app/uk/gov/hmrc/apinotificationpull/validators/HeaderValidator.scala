@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apinotificationpull.validators
 
-import play.api.mvc.{ActionBuilder, Request, Result, Results}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
+import play.api.mvc.{ActionBuilder, Request, Result, Results}
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
 
 import scala.concurrent.Future
 
@@ -39,5 +40,5 @@ class HeaderValidator extends Results {
   private val xClientIdHeaderRules: Option[String] => Boolean = _ exists (_ => true)
 
   def validateAcceptHeader: ActionBuilder[Request] = validateHeader(acceptHeaderRules, ACCEPT, Status(NOT_ACCEPTABLE))
-  def validateXClientIdHeader: ActionBuilder[Request] = validateHeader(xClientIdHeaderRules, "X-Client-ID", Status(INTERNAL_SERVER_ERROR))
+  def validateXClientIdHeader: ActionBuilder[Request] = validateHeader(xClientIdHeaderRules, X_CLIENT_ID_HEADER_NAME, Status(INTERNAL_SERVER_ERROR))
 }
