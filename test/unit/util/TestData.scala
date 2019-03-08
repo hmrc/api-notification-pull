@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.controllers
+package unit.util
 
-object CustomHeaderNames {
+import play.api.http.HeaderNames.ACCEPT
+import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
 
-  val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
+object TestData {
+
+  val ClientId = "client-id"
 
   val ACCEPT_HEADER_VALUE = "application/vnd.hmrc.1.0+xml"
+
+  lazy val ACCEPT_HEADER: (String, String) = ACCEPT -> ACCEPT_HEADER_VALUE
+
+  lazy val X_CLIENT_ID_HEADER: (String, String) = X_CLIENT_ID_HEADER_NAME -> ClientId
+
+  val LoggingHeaders: Seq[(String, String)] = Seq(X_CLIENT_ID_HEADER, ACCEPT_HEADER)
 
 }

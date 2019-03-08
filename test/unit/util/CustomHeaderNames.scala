@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apinotificationpull.controllers
+package unit.util
 
 object CustomHeaderNames {
 
   val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
-
-  val ACCEPT_HEADER_VALUE = "application/vnd.hmrc.1.0+xml"
 
 }

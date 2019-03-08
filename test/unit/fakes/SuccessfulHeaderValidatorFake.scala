@@ -16,12 +16,14 @@
 
 package unit.fakes
 
+import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{ActionBuilder, Request, Result}
+import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 
 import scala.concurrent.Future
 
-class SuccessfulHeaderValidatorFake extends HeaderValidator {
+class SuccessfulHeaderValidatorFake(logger: NotificationLogger) extends HeaderValidator(logger) with MockitoSugar {
   override def validateAcceptHeader: ActionBuilder[Request] = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = block(request)
   }
