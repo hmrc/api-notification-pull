@@ -28,7 +28,7 @@ object LoggingHelper {
   private def formatLogPrefixWithHeaders(headers: SeqOfHeader): String = {
     val maybeClientId = findHeaderValue(X_CLIENT_ID_HEADER_NAME, headers)
 
-    maybeClientId.fold("")(maybeClientId => s"[clientId=$maybeClientId]")
+    maybeClientId.fold("")(clientId => s"[clientId=$clientId]")
   }
 
   private def findHeaderValue(headerName: String, headers: SeqOfHeader): Option[String] = {

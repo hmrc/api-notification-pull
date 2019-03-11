@@ -32,6 +32,7 @@ class ApiNotificationQueueConnector @Inject()(config: ServiceConfiguration, http
 
   def getNotifications()(implicit hc: HeaderCarrier): Future[Notifications] = {
     val url = s"$serviceBaseUrl/notifications"
+
     logger.debug(s"Calling get notifications using url: $url", hc.headers)
     http.GET[Notifications](url)
   }
@@ -45,12 +46,12 @@ class ApiNotificationQueueConnector @Inject()(config: ServiceConfiguration, http
         logger.debug(s"Notification received successfully with id: $notificationId", hc.headers)
         Some(Notification(notificationId, r.allHeaders.map(h => h._1 -> h._2.head), r.body))
       }
-      .recoverWith {
-        case _: NotFoundException => {
-          logger.debug(s"Notification not found with id: $notificationId", hc.headers)
-          Future.successful(None)
-        }
+      .recover[Option[Notification]] {
+      case _: NotFoundException => {
+        logger.debug(s"Notification not found with id: $notificationId", hc.headers)
+        None
       }
+    }
   }
 
   def delete(notification: Notification)(implicit hc: HeaderCarrier): Future[HttpResponse] = {

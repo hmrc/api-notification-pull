@@ -46,10 +46,10 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServiceConfigurati
       .map { r =>
         Right(Notification(notificationId, r.allHeaders.map(h => h._1 -> h._2.head), r.body))
       }
-      .recover {
-        case nfe: NotFoundException => Left(nfe)
-        case bre: BadRequestException => Left(bre)
-        case ise => Left(new InternalServerException(ise.getMessage))
-      }
+      .recover[Either[HttpException, Notification]] {
+      case nfe: NotFoundException => Left(nfe)
+      case bre: BadRequestException => Left(bre)
+      case ise => Left(new InternalServerException(ise.getMessage))
+    }
   }
 }
