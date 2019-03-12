@@ -25,7 +25,7 @@ import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.TestData.LoggingHeaders
+import unit.util.RequestHeaders.LoggingHeaders
 import util.MockitoPassByNameHelper.PassByNameVerifier
 
 class NotificationLoggerSpec extends UnitSpec with MockitoSugar {

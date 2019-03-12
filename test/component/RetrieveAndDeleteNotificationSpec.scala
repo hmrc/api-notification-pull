@@ -23,8 +23,8 @@ import org.scalatest.OptionValues._
 import org.scalatest.concurrent.Eventually
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
-import unit.util.TestData.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
+import unit.util.RequestHeaders.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
 
 class RetrieveAndDeleteNotificationSpec extends ComponentSpec with Eventually with ExternalServices {
 

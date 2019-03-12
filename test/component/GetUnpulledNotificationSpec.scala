@@ -21,7 +21,7 @@ import java.util.UUID
 import org.scalatest.OptionValues._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import unit.util.TestData.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
 import unit.util.XmlUtil.string2xml
 
 class GetUnpulledNotificationSpec extends ComponentSpec with ExternalServices {

@@ -26,9 +26,9 @@ import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.config.ServicesConfig
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
 import unit.util.StubNotificationLogger
-import unit.util.TestData.{ACCEPT_HEADER, ACCEPT_HEADER_VALUE, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.{ACCEPT_HEADER, ACCEPT_HEADER_VALUE, X_CLIENT_ID_HEADER}
 
 class HeaderValidatorSpec extends UnitSpec with MockitoSugar {
 

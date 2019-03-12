@@ -30,9 +30,9 @@ import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.{NotFoundException, _}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
 import unit.util.StubNotificationLogger
-import unit.util.TestData.{ClientId, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.{ClientId, X_CLIENT_ID_HEADER}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -18,7 +18,7 @@ package unit.logging
 
 import uk.gov.hmrc.apinotificationpull.logging.LoggingHelper
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.TestData
+import unit.util.RequestHeaders
 
 class LoggingHelperSpec extends UnitSpec {
 
@@ -27,7 +27,7 @@ class LoggingHelperSpec extends UnitSpec {
   "LoggingHelper" should {
 
     "format with headers" in {
-      val actual = LoggingHelper.formatWithHeaders(debugMsg, TestData.LoggingHeaders)
+      val actual = LoggingHelper.formatWithHeaders(debugMsg, RequestHeaders.LoggingHeaders)
 
       actual shouldBe "[clientId=client-id] DEBUG\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))"
     }

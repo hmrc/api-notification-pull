@@ -22,8 +22,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.{status => _, _}
 import org.scalatest.OptionValues._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
-import unit.util.TestData.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
+import unit.util.RequestHeaders.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
 
 class GetAllNotificationsSpec extends ComponentSpec with ExternalServices {
 

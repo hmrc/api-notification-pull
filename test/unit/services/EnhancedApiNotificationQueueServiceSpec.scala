@@ -25,7 +25,7 @@ import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.TestData.X_CLIENT_ID_HEADER
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER
 
 import scala.concurrent.Future
 

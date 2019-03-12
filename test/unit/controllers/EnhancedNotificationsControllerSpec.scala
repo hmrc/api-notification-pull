@@ -39,7 +39,7 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import unit.fakes.SuccessfulHeaderValidatorFake
 import unit.util.StubNotificationLogger
-import unit.util.TestData.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
+import unit.util.RequestHeaders.{ACCEPT_HEADER, X_CLIENT_ID_HEADER}
 import unit.util.XmlUtil.string2xml
 
 import scala.concurrent.Future

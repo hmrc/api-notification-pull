@@ -17,13 +17,14 @@
 package unit.util
 
 import play.api.http.HeaderNames.ACCEPT
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
 
-object TestData {
-
-  val ClientId = "client-id"
+object RequestHeaders {
 
   val ACCEPT_HEADER_VALUE = "application/vnd.hmrc.1.0+xml"
+
+  val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
+
+  val ClientId = "client-id"
 
   lazy val ACCEPT_HEADER: (String, String) = ACCEPT -> ACCEPT_HEADER_VALUE
 

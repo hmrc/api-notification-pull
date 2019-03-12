@@ -34,8 +34,8 @@ import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
 import uk.gov.hmrc.play.test.UnitSpec
-import unit.util.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
-import unit.util.TestData.ClientId
+import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
+import unit.util.RequestHeaders.ClientId
 import util.ExternalServicesConfig.{Host, Port}
 import util.WireMockRunner
 
