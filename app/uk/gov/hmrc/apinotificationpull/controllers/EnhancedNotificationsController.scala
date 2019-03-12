@@ -20,13 +20,14 @@ import akka.util.ByteString
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
 import play.api.mvc._
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.{X_CLIENT_ID_HEADER_NAME, getHeadersFromRequest}
+import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.EnhancedXmlBuilder
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.controllers.ErrorResponse.{ErrorInternalServerError, ErrorNotFound, errorBadRequest}
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
@@ -36,11 +37,9 @@ import scala.concurrent.ExecutionContext
 class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueService: EnhancedApiNotificationQueueService,
                                                 headerValidator: HeaderValidator,
                                                 enhancedXmlBuilder: EnhancedXmlBuilder,
-                                                logger: CdsLogger)(implicit ec: ExecutionContext) extends BaseController {
+                                                logger: NotificationLogger)(implicit ec: ExecutionContext) extends BaseController {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  private val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 
   private val badRequestPulledText = "Notification is unpulled"
   private val badRequestUnpulledText = "Notification has been pulled"
@@ -56,17 +55,19 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
   private def getList(notificationStatus: NotificationStatus.Value): Action[AnyContent] =
   (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
-    implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+    logger.debug("In EnhancedNotificationsController.getList")
+
+    implicit val hc: HeaderCarrier = buildHeaderCarrier()
 
     enhancedApiNotificationQueueService.getAllNotificationsBy(notificationStatus).map { notifications =>
-        Ok(enhancedXmlBuilder.toXml(notifications, notificationStatus)).as(XML)
+      Ok(enhancedXmlBuilder.toXml(notifications, notificationStatus)).as(XML)
     } recover recovery
   }
 
   private def get(notificationId: String, notificationStatus: NotificationStatus.Value, badRequestText: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
-
-      implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+      logger.debug("In EnhancedNotificationsController.get")
+      implicit val hc: HeaderCarrier = buildHeaderCarrier()
       enhancedApiNotificationQueueService.getNotificationBy(notificationId, notificationStatus)
         .map {
           case Right(n) => Result(
@@ -82,12 +83,15 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
           case Left(e) =>
             logger.error(s"Internal server error for notification id: $notificationId", e)
             ErrorInternalServerError.XmlResult
-        }.recover(recovery)
+        }.recover(recovery(request))
   }
 
-  private def buildHeaderCarrier(request: Request[AnyContent] ): HeaderCarrier = {
-    request.headers.get(X_CLIENT_ID_HEADER_NAME) match {
-      case Some(clientId: String) => hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
+  private def buildHeaderCarrier()(implicit request: Request[AnyContent] ): HeaderCarrier = {
+    val maybeClientId = request.headers.get(X_CLIENT_ID_HEADER_NAME)
+    maybeClientId match {
+      case Some(clientId: String) =>
+        logger.debug(s"Got client id from header: $maybeClientId")
+        hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
       case _ =>
         // It should never happen
         logger.warn(s"Header $X_CLIENT_ID_HEADER_NAME not found in the request.")
@@ -95,7 +99,7 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
     }
   }
 
-  private def recovery: PartialFunction[Throwable, Result] = {
+  private def recovery[A](implicit request: Request[A]): PartialFunction[Throwable, Result] = {
     case e =>
       logger.error(s"An unexpected error occurred: ${e.getMessage}", e)
       ErrorInternalServerError.XmlResult
