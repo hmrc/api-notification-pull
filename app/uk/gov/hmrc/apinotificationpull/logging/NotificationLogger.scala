@@ -25,11 +25,11 @@ import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 @Singleton
 class NotificationLogger @Inject()(logger: CdsLogger) {
 
-  def debug(msg: => String, headers: => SeqOfHeader): Unit = logger.debug(formatWithHeaders(msg, headers))
-  def info(msg: => String, headers: => SeqOfHeader): Unit = logger.info(formatWithHeaders(msg, headers))
-  def info(msg: => String, headers: => SeqOfHeader, e: => Throwable): Unit = logger.info(formatWithHeaders(msg, headers), e)
-  def warn(msg: => String, headers: => SeqOfHeader): Unit = logger.warn(formatWithHeaders(msg, headers))
-  def error(msg: => String, headers: => SeqOfHeader): Unit = logger.error(formatWithHeaders(msg, headers))
-  def error(msg: => String, headers: => SeqOfHeader, e: => Throwable): Unit = logger.error(formatWithHeaders(msg, headers), e)
+  def debug(msg: => String)(implicit headers: SeqOfHeader): Unit = logger.debug(formatWithHeaders(msg, headers))
+  def info(msg: => String)(implicit headers: SeqOfHeader): Unit = logger.info(formatWithHeaders(msg, headers))
+  def info(msg: => String, e: => Throwable)(implicit headers: SeqOfHeader): Unit = logger.info(formatWithHeaders(msg, headers), e)
+  def warn(msg: => String)(implicit headers: SeqOfHeader): Unit = logger.warn(formatWithHeaders(msg, headers))
+  def error(msg: => String)(implicit headers: SeqOfHeader): Unit = logger.error(formatWithHeaders(msg, headers))
+  def error(msg: => String, e: => Throwable)(implicit headers: SeqOfHeader): Unit = logger.error(formatWithHeaders(msg, headers), e)
 
 }

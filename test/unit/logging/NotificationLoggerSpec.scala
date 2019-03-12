@@ -17,9 +17,13 @@
 package unit.logging
 
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import unit.util.TestData.LoggingHeaders
 import util.MockitoPassByNameHelper.PassByNameVerifier
@@ -31,11 +35,16 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
   trait SetUp {
     val mockCdsLogger: CdsLogger = mock[CdsLogger]
     val logger = new NotificationLogger(mockCdsLogger)
+
+    implicit val mockHeaderCarrier: HeaderCarrier = mock[HeaderCarrier]
+    when(mockHeaderCarrier.headers).thenReturn(LoggingHeaders)
   }
 
   "NotificationsLogger" should {
     "debug(s: => String, headers: => SeqOfHeader)" in new SetUp {
-      logger.debug("msg", LoggingHeaders)
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.debug("msg")
 
       PassByNameVerifier(mockCdsLogger, "debug")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
@@ -43,7 +52,9 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
     }
 
     "info(s: => String, headers: => SeqOfHeader, e: => Throwable)" in new SetUp {
-      logger.info("msg", LoggingHeaders, new Exception(""))
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.info("msg", new Exception(""))
 
       PassByNameVerifier(mockCdsLogger, "info")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
@@ -52,7 +63,9 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
     }
 
     "info(s: => String, headers: => SeqOfHeader)" in new SetUp {
-      logger.info("msg", LoggingHeaders)
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.info("msg")
 
       PassByNameVerifier(mockCdsLogger, "info")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
@@ -60,7 +73,9 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
     }
 
     "warn(s: => String, headers: => SeqOfHeader)" in new SetUp {
-      logger.warn("msg", LoggingHeaders)
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.warn("msg")
 
       PassByNameVerifier(mockCdsLogger, "warn")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
@@ -68,7 +83,9 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
     }
 
     "error(s: => String, headers: => SeqOfHeader)" in new SetUp {
-      logger.error("msg", LoggingHeaders)
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.error("msg")
 
       PassByNameVerifier(mockCdsLogger, "error")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
@@ -76,7 +93,21 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
     }
 
     "error(s: => String, headers: => SeqOfHeader, e: => Throwable)" in new SetUp {
-      logger.error("msg", LoggingHeaders, new Exception(""))
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
+
+      logger.error("msg", new Exception(""))
+
+      PassByNameVerifier(mockCdsLogger, "error")
+        .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")
+        .withByNameParamMatcher(any[Throwable])
+        .verify()
+    }
+
+    "error(s: => String, headers: => SeqOfHeader, e: => Throwable) for getting headers from request implicitly" in new SetUp {
+      implicit val mockRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(LoggingHeaders: _*)
+      import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromRequest
+
+      logger.error("msg", new Exception(""))
 
       PassByNameVerifier(mockCdsLogger, "error")
         .withByNameParam("[clientId=client-id] msg\nheaders=List((X-Client-ID,client-id), (Accept,application/vnd.hmrc.1.0+xml))")

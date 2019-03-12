@@ -16,10 +16,21 @@
 
 package uk.gov.hmrc.apinotificationpull.controllers
 
+import play.api.mvc.Request
+import uk.gov.hmrc.apinotificationpull.model.SeqOfHeader
+import uk.gov.hmrc.http.HeaderCarrier
+
 object CustomHeaderNames {
 
   val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 
   val ACCEPT_HEADER_VALUE = "application/vnd.hmrc.1.0+xml"
 
+  implicit def getHeadersFromHeaderCarrier[A](implicit hc: HeaderCarrier): SeqOfHeader = {
+    hc.headers
+  }
+
+    implicit def getHeadersFromRequest[A](implicit r: Request[A]): SeqOfHeader = {
+      r.headers.headers
+    }
 }

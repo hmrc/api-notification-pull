@@ -18,11 +18,11 @@ package uk.gov.hmrc.apinotificationpull.connectors
 
 import javax.inject.Inject
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import uk.gov.hmrc.apinotificationpull.model.{Notification, NotificationStatus, Notifications}
 import uk.gov.hmrc.apinotificationpull.config.ServiceConfiguration
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
-import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException}
+import uk.gov.hmrc.apinotificationpull.model.{Notification, NotificationStatus, Notifications}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, _}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
@@ -34,14 +34,14 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServiceConfigurati
   def getAllNotificationsBy(notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Notifications] = {
 
     val url = s"$serviceBaseUrl/notifications/${notificationStatus.toString}"
-    logger.debug(s"Calling get all notifications by using url: $url", hc.headers)
+    logger.debug(s"Calling get all notifications by using url: $url")
     http.GET[Notifications](url)
   }
 
   def getNotificationBy(notificationId: String, notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
 
     val url = s"$serviceBaseUrl/notifications/${notificationStatus.toString}/$notificationId"
-    logger.debug(s"Calling get notifications by using url: $url", hc.headers)
+    logger.debug(s"Calling get notifications by using url: $url")
     http.GET[HttpResponse](url)
       .map { r =>
         Right(Notification(notificationId, r.allHeaders.map(h => h._1 -> h._2.head), r.body))

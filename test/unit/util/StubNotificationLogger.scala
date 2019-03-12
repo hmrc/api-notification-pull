@@ -23,22 +23,22 @@ import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 // Use purely to increase coverage
 class StubNotificationLogger(logger: CdsLogger) extends NotificationLogger(logger) {
 
-  override def debug(msg: => String, headers: => SeqOfHeader): Unit =
+  override def debug(msg: => String)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers")
 
-  override def info(msg: => String, headers: => SeqOfHeader): Unit =
+  override def info(msg: => String)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers")
 
-  override def info(msg: => String, headers: => SeqOfHeader, e: => Throwable): Unit =
+  override def info(msg: => String, e: => Throwable)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers, error: $e")
 
-  override def warn(msg: => String, headers: => SeqOfHeader): Unit =
+  override def warn(msg: => String)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers")
 
-  override def error(msg: => String, headers: => SeqOfHeader, e: => Throwable): Unit =
+  override def error(msg: => String, e: => Throwable)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers, error: $e")
 
-  override def error(msg: => String, headers: => SeqOfHeader): Unit =
+  override def error(msg: => String)(implicit headers: SeqOfHeader): Unit =
     println(s"msg: $msg, headers: $headers")
 
 }

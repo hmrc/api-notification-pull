@@ -19,7 +19,7 @@ package uk.gov.hmrc.apinotificationpull.controllers
 import javax.inject.{Inject, Singleton}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.X_CLIENT_ID_HEADER_NAME
+import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.{X_CLIENT_ID_HEADER_NAME, getHeadersFromRequest}
 import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.apinotificationpull.model.XmlErrorResponse
 import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
@@ -38,41 +38,41 @@ class NotificationsController @Inject()(apiNotificationQueueService: ApiNotifica
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private def recovery[A](request: Request[A]): PartialFunction[Throwable, Result] = {
+  private def recovery[A](implicit request: Request[A]): PartialFunction[Throwable, Result] = {
     case e =>
-      logger.error(s"An unexpected error occurred: ${e.getMessage}", request.headers.headers)
+      logger.error(s"An unexpected error occurred: ${e.getMessage}")
       InternalServerError(XmlErrorResponse("An unexpected error occurred"))
   }
 
   def delete(notificationId: String): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
-      logger.debug("In NotificationsController.delete", request.headers.headers)
-      implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+      logger.debug("In NotificationsController.delete")
+      implicit val hc: HeaderCarrier = buildHeaderCarrier()
       apiNotificationQueueService.getAndRemoveNotification(notificationId)
         .map(notificationPresenter.present)
-        .recover(recovery(request))
+        .recover(recovery)
   }
 
   def getAll: Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
 
-      logger.debug("In NotificationsController.getAll", request.headers.headers)
-      implicit val hc: HeaderCarrier = buildHeaderCarrier(request)
+      logger.debug("In NotificationsController.getAll")
+      implicit val hc: HeaderCarrier = buildHeaderCarrier()
       apiNotificationQueueService.getNotifications().map { notifications =>
         Ok(xmlBuilder.toXml(notifications)).as(XML)
-      } recover recovery(request)
+      } recover recovery
   }
 
-  private def buildHeaderCarrier(request: Request[AnyContent]): HeaderCarrier = {
+  private def buildHeaderCarrier()(implicit request: Request[AnyContent]): HeaderCarrier = {
     val maybeClientId = request.headers.get(X_CLIENT_ID_HEADER_NAME)
     maybeClientId match {
       case Some(clientId: String) =>
-        logger.debug(s"Got client id from header: $maybeClientId", request.headers.headers)
+        logger.debug(s"Got client id from header: $maybeClientId")
         hc.withExtraHeaders(X_CLIENT_ID_HEADER_NAME -> clientId)
       case _ =>
         // It should never happen
-        logger.warn(s"Header $X_CLIENT_ID_HEADER_NAME not found in the request.", request.headers.headers)
+        logger.warn(s"Header $X_CLIENT_ID_HEADER_NAME not found in the request.")
         hc
     }
   }
