@@ -41,7 +41,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
   }
 
   "NotificationsLogger" should {
-    "debug(s: => String, headers: => SeqOfHeader)" in new SetUp {
+    "debug(s: => String)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.debug("msg")
@@ -51,7 +51,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "info(s: => String, headers: => SeqOfHeader, e: => Throwable)" in new SetUp {
+    "info(s: => String, e: => Throwable)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.info("msg", new Exception(""))
@@ -62,7 +62,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "info(s: => String, headers: => SeqOfHeader)" in new SetUp {
+    "info(s: => String)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.info("msg")
@@ -72,7 +72,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "warn(s: => String, headers: => SeqOfHeader)" in new SetUp {
+    "warn(s: => String)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.warn("msg")
@@ -82,7 +82,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "error(s: => String, headers: => SeqOfHeader)" in new SetUp {
+    "error(s: => String)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.error("msg")
@@ -92,7 +92,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "error(s: => String, headers: => SeqOfHeader, e: => Throwable)" in new SetUp {
+    "error(s: => String, e: => Throwable)(implicit headers: SeqOfHeader)" in new SetUp {
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 
       logger.error("msg", new Exception(""))
@@ -103,7 +103,7 @@ class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
         .verify()
     }
 
-    "error(s: => String, headers: => SeqOfHeader, e: => Throwable) for getting headers from request implicitly" in new SetUp {
+    "error(s: => String, e: => Throwable)(implicit headers: SeqOfHeader) for getting headers from request implicitly" in new SetUp {
       implicit val mockRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(LoggingHeaders: _*)
       import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromRequest
 
