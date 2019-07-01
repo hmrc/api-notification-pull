@@ -1,35 +1,32 @@
-This API enables your application to “pull” business event notifications CDS has generated from requests submitted via the CDS APIs.
+Use this API to "pull" business event notifications that CDS generates in response to requests you submitted using the CDS APIs.
 
-For example, if you submit a form to a CDS API the request is accepted with a HTTP status code 202 but then waits for further human intervention. After this intervention happens, CDS has a new notification for your application.
+If you submit a declaration to a CDS API, we accept the request with an HTTP status code 202. As your declaration is processed, we generate notifications.
 
-If  a URL to a client callback service has been provided in  subscription details, CDS will try to push this notification to your application,  where the push fails then this notification is sent to the notification pull queue. Failure can happen if your system is down, or your firewall rules prevent it, or you choose to use this pull method instead.
+If you provided a callback URL when you subscribed to the CDS API, we push the notifications to your callback URL.
 
-Where a notification has been sent to the pull queue, your application can now pull the notification from the queue using the Pull Notifications API.  Pull notifications remain queued for 14 days, after which notifications automatically delete from the queue.
+If you did not provide a callback URL when you subscribed to the CDS API, we send the notifications to this pull queue.
 
+Pull notifications remain queued for 14 days, after which we delete notifications from the queue automatically.
 
-The Pull Notifications API works in two discrete modes.  It is recommended that your application consumes the Pull Notifications API in one of the following modes:
-
-
-## Retrieve and delete pull notifications
-
-This mode is implemented via the following two  endpoints:
-
-GET /notifications - returns a list of all notifications ids available to be pulled for a given Client id.
-
-DELETE /notifications/{Id} - retrieve and delete the requested notification.
-
+The Pull Notifications API works in 2 discrete modes. We recommend that your application uses the Pull Notifications API as described under Retrieve and persist pull notifications.
 
 ## Retrieve and persist pull notifications
 
-This mode will persist a retrieved notification for a maximum of 14 days from when the notification was generated. During this time the notification is persisted in the pull notification queue and can be retrieved any number of times.
+Use these 2 endpoints to pull notifications you have not pulled yet:
 
-The retrieve and persist mode is implemented via the following four endpoints:
+* `GET /notifications/unpulled` returns a list of identifiers for notifications that you have not pulled previously 
+* `GET /notifications/unpulled/{notificationId}` returns a notification you have not pulled previously
 
-GET /notifications/unpulled - returns a list of new notifications ids only. ‘New’ is  defined as notifications that have not been previously pulled.
+To retrieve notifications that you have pulled previously, use these 2 endpoints (which gives you a backup for previously pulled notifications):
 
-GET /notifications/unpulled/{notificationId} - returns an individual new notification. Instead of the previous DELETE operation, pulled notifications are now retained with a ‘pulled’ status for a period of 14 days from the date the notification was generated.
+* `GET /notifications/pulled` returns a list of identifiers for notifications that you have pulled previously 
+* `GET /notifications/pulled/{notificationId}` returns a notification that you have pulled previously
 
-GET /notifications/pulled - returns a list of previously pulled notification ids only. The response will contain the  ids of all pulled notifications for a given Client id for the past 14 days.
 
-GET /notifications/pulled/{notificationId} - returns an individual, previously pulled notification up to 14 days from the date the notification was generated.
+## Retrieve and delete pull notifications (deprecated)
+
+To delete notifications as you pull them, use these 2 endpoints:
+    
+* `GET /notifications`  returns a list of identifiers for notifications available for you to pull
+* `DELETE /notifications/{Id}` pull and delete the requested notification
 
