@@ -32,4 +32,8 @@ class EnhancedApiNotificationQueueService @Inject()(enhancedApiNotificationQueue
   def getAllNotificationsBy(notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Notifications] = {
     enhancedApiNotificationQueueConnector.getAllNotificationsBy(notificationStatus)
   }
+
+  def getAllNotificationsBy(conversationId: String)(implicit hc: HeaderCarrier): Future[Notifications] = {
+    enhancedApiNotificationQueueConnector.getAllNotificationsBy(conversationId)
+  }
 }

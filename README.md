@@ -7,6 +7,31 @@ This API allows third party developers to collect notifications.
 
 ## Endpoints
 
+### GET `/conversationId/{conversationId}`
+
+Get a list of notifications by conversation ID
+
+Required Headers:
+  - `X-Client-ID`
+  - `Accept`
+
+```
+curl -v -X GET "http://localhost:9649/conversationId/dc7cb9ef-75db-4adc-b2cb-e2b86bdbc478" \
+  -H "X-Client-ID: 580e3940-fb35-4421-b7c7-949f64a97870" \
+  -H "Accept: application/vnd.hmrc.1.0+xml"
+```
+
+#### Responses
+##### Success
+```
+200 OK
+ <resource href="/notifications/conversationId/dc7cb9ef-75db-4adc-b2cb-e2b86bdbc478">
+    <link rel="self" href="/notifications/conversationId/dc7cb9ef-75db-4adc-b2cb-e2b86bdbc478"/>
+    <link rel="notification" href="/notifications/unpulled/f1065d30-7854-44e8-a3bb-53986ad98e43"/>
+    <link rel="notification" href="/notifications/pulled/7dbada32-3f0f-4784-8290-6fc86cff3528"/>
+ </resource>
+```
+
 ### GET `/unpulled`
 
 Get a list of unpulled notification

@@ -103,7 +103,8 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
     "return a list of unpulled notifications" in new SetUp {
 
       when(mockEnhancedApiNotificationQueueService.getAllNotificationsBy(any[NotificationStatus.Value])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Notifications(List("notification-unpulled-1", "notification-unpulled-2"))))
+        .thenReturn(Future.successful(Notifications(List("/api-notification-pull-context/unpulled/notification-unpulled-1",
+          "/api-notification-pull-context/unpulled/notification-unpulled-2"))))
 
       val result = await(controller.unpulledList().apply(validRequest))
 
@@ -123,7 +124,8 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
     "return a list of pulled notifications" in new SetUp {
 
       when(mockEnhancedApiNotificationQueueService.getAllNotificationsBy(any[NotificationStatus.Value])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Notifications(List("notification-pulled-1", "notification-pulled-2"))))
+        .thenReturn(Future.successful(Notifications(List("/api-notification-pull-context/pulled/notification-pulled-1",
+          "/api-notification-pull-context/pulled/notification-pulled-2"))))
 
       val result = await(controller.pulledList().apply(validRequest))
 
@@ -132,6 +134,27 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
       private val expectedXml = scala.xml.Utility.trim(
         <resource href="/notifications/pulled/">
           <link rel="self" href="/notifications/pulled/"/>
+          <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-1"/>
+          <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-2"/>
+        </resource>
+      )
+
+      string2xml(bodyOf(result)) shouldBe expectedXml
+    }
+
+    "return a list of notifications by conversation id" in new SetUp {
+
+      when(mockEnhancedApiNotificationQueueService.getAllNotificationsBy(meq("19aaef3d-1c8d-4837-a290-90a09434e205"))(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Notifications(List("/api-notification-pull-context/pulled/notification-pulled-1",
+          "/api-notification-pull-context/pulled/notification-pulled-2"))))
+
+      val result = await(controller.listBy("19aaef3d-1c8d-4837-a290-90a09434e205").apply(validRequest))
+
+      status(result) shouldBe OK
+
+      private val expectedXml = scala.xml.Utility.trim(
+        <resource href="/notifications/conversationId/19aaef3d-1c8d-4837-a290-90a09434e205/">
+          <link rel="self" href="/notifications/conversationId/19aaef3d-1c8d-4837-a290-90a09434e205/"/>
           <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-1"/>
           <link rel="notification" href="/api-notification-pull-context/pulled/notification-pulled-2"/>
         </resource>

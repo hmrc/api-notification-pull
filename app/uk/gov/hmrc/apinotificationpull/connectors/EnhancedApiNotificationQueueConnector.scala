@@ -30,6 +30,13 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServicesConfig, ht
 
   private lazy val serviceBaseUrl: String = config.baseUrl("api-notification-queue")
 
+  def getAllNotificationsBy(conversationId: String)(implicit hc: HeaderCarrier): Future[Notifications] = {
+
+    val url = s"$serviceBaseUrl/notifications/conversationId/$conversationId"
+    logger.debug(s"Calling get all notifications by using url: $url")
+    http.GET[Notifications](url)
+  }
+
   def getAllNotificationsBy(notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Notifications] = {
 
     val url = s"$serviceBaseUrl/notifications/${notificationStatus.toString}"
