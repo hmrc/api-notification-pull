@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apinotificationpull.connectors
 
+import java.util.UUID
+
 import javax.inject.Inject
 import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
@@ -30,7 +32,7 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServicesConfig, ht
 
   private lazy val serviceBaseUrl: String = config.baseUrl("api-notification-queue")
 
-  def getAllNotificationsBy(conversationId: String)(implicit hc: HeaderCarrier): Future[Notifications] = {
+  def getAllNotificationsBy(conversationId: UUID)(implicit hc: HeaderCarrier): Future[Notifications] = {
 
     val url = s"$serviceBaseUrl/notifications/conversationId/$conversationId"
     logger.debug(s"Calling get all notifications by using url: $url")

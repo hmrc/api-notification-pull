@@ -17,6 +17,7 @@
 package unit.controllers
 
 import java.util.UUID
+import java.util.UUID.fromString
 
 import akka.stream.Materializer
 import org.mockito.ArgumentMatchers.{eq => meq, _}
@@ -144,11 +145,11 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with WithFakeApplicat
 
     "return a list of notifications by conversation id" in new SetUp {
 
-      when(mockEnhancedApiNotificationQueueService.getAllNotificationsBy(meq("19aaef3d-1c8d-4837-a290-90a09434e205"))(any[HeaderCarrier]))
+      when(mockEnhancedApiNotificationQueueService.getAllNotificationsBy(meq(fromString("19aaef3d-1c8d-4837-a290-90a09434e205")))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Notifications(List("/api-notification-pull-context/pulled/notification-pulled-1",
           "/api-notification-pull-context/pulled/notification-pulled-2"))))
 
-      val result = await(controller.listBy("19aaef3d-1c8d-4837-a290-90a09434e205").apply(validRequest))
+      val result = await(controller.listBy(fromString("19aaef3d-1c8d-4837-a290-90a09434e205")).apply(validRequest))
 
       status(result) shouldBe OK
 

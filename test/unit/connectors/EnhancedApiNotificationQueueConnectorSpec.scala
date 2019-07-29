@@ -16,6 +16,9 @@
 
 package unit.connectors
 
+import java.util.UUID
+import java.util.UUID.fromString
+
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
@@ -86,7 +89,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       when(mockHttpClient.GET[Notifications](meq(s"http://api-notification-queue.url/notifications/conversationId/0ad764d1-ba29-4bfb-b7f7-25adbede0002"))
         (any[HttpReads[Notifications]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(notifications))
 
-      val result: Notifications = await(enhancedApiNotificationQueueConnector.getAllNotificationsBy("0ad764d1-ba29-4bfb-b7f7-25adbede0002"))
+      val result: Notifications = await(enhancedApiNotificationQueueConnector.getAllNotificationsBy(fromString("0ad764d1-ba29-4bfb-b7f7-25adbede0002")))
 
       result shouldBe notifications
     }
@@ -173,7 +176,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       when(mockHttpClient.GET[Notifications](meq(s"http://api-notification-queue.url/notifications/conversationId/0ad764d1-ba29-4bfb-b7f7-25adbede0002"))
         (any[HttpReads[Notifications]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(Notifications(List())))
 
-      val result = await(enhancedApiNotificationQueueConnector.getAllNotificationsBy("0ad764d1-ba29-4bfb-b7f7-25adbede0002"))
+      val result = await(enhancedApiNotificationQueueConnector.getAllNotificationsBy(fromString("0ad764d1-ba29-4bfb-b7f7-25adbede0002")))
 
       result shouldBe Notifications(List())
     }

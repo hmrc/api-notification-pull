@@ -16,6 +16,9 @@
 
 package unit.services
 
+import java.util.UUID
+import java.util.UUID.fromString
+
 import org.mockito.Mockito._
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,7 +37,7 @@ class EnhancedApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar
   private val hc = HeaderCarrier()
 
   val notificationId = "some-notification-id"
-  val conversationId = "6e97f91f-f0c0-43bd-a3e0-cfa3dbc0df4f"
+  val conversationId = fromString("6e97f91f-f0c0-43bd-a3e0-cfa3dbc0df4f")
 
   trait Setup {
     val mockEnhancedApiNotificationQueueConnector = mock[EnhancedApiNotificationQueueConnector]

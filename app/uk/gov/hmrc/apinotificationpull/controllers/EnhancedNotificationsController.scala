@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apinotificationpull.controllers
 
+import java.util.UUID
+
 import akka.util.ByteString
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
@@ -55,9 +57,9 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
 
   def unpulledList(): Action[AnyContent] = getList(Unpulled)
 
-  def listBy(conversationId: String): Action[AnyContent] = getListBy(conversationId)
+  def listBy(conversationId: UUID): Action[AnyContent] = getListBy(conversationId)
 
-  private def getListBy(conversationId: String): Action[AnyContent] =
+  private def getListBy(conversationId: UUID): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
       logger.debug("In EnhancedNotificationsController.getListBy")
 
