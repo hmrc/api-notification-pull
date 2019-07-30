@@ -79,6 +79,15 @@ class EnhancedApiNotificationQueueServiceSpec extends UnitSpec with MockitoSugar
       result shouldBe Notifications(List())
     }
 
+    "pass the conversation id and notification status to the connector" in new Setup {
+
+      when(mockEnhancedApiNotificationQueueConnector.getAllNotificationsBy(conversationId, Unpulled)(hc)).thenReturn(Future.successful(Notifications(List())))
+
+      val result = await(enhancedApiNotificationQueueService.getAllNotificationsBy(conversationId, Unpulled)(hc))
+
+      result shouldBe Notifications(List())
+    }
+
     "pass the notification status to the connector" in new Setup {
 
       when(mockEnhancedApiNotificationQueueConnector.getAllNotificationsBy(Pulled)(hc)).thenReturn(Future.successful(Notifications(List())))

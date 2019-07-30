@@ -59,6 +59,11 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
 
   def listBy(conversationId: UUID): Action[AnyContent] = getListBy(conversationId)
 
+  def listUnpulledBy(conversationId: UUID): Action[AnyContent] = getListBy(conversationId, Unpulled)
+
+  def listPulledBy(conversationId: UUID): Action[AnyContent] = getListBy(conversationId, Pulled)
+
+
   private def getListBy(conversationId: UUID): Action[AnyContent] =
     (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
       logger.debug("In EnhancedNotificationsController.getListBy")
@@ -67,6 +72,17 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
 
       enhancedApiNotificationQueueService.getAllNotificationsBy(conversationId).map { notifications =>
         Ok(enhancedXmlBuilder.toXml(notifications, conversationId)).as(XML)
+      } recover recovery
+    }
+
+  private def getListBy(conversationId: UUID, notificationStatus: NotificationStatus.Value): Action[AnyContent] =
+    (headerValidator.validateAcceptHeader andThen headerValidator.validateXClientIdHeader).async { implicit request =>
+      logger.debug("In EnhancedNotificationsController.getListBy")
+
+      implicit val hc: HeaderCarrier = buildHeaderCarrier()
+
+      enhancedApiNotificationQueueService.getAllNotificationsBy(conversationId, notificationStatus).map { notifications =>
+        Ok(enhancedXmlBuilder.toXml(notifications, conversationId, notificationStatus)).as(XML)
       } recover recovery
     }
 

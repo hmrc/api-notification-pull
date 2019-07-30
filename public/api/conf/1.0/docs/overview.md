@@ -10,6 +10,18 @@ Pull notifications remain queued for 14 days after which they are deleted from t
 
 The Pull Notifications API works in 2 discrete modes. It is recommended that your application use the Pull Notifications API as described under Retrieve pull notifications.
 
+## Retrieve pull notifications by conversation identifier
+
+Use these 2 endpoints to pull notifications have not been pulled yet:
+
+* `GET /notifications/conversationId/{conversationId}/unpulled` returns a list of identifiers for notifications that have not been pulled previously 
+* `GET /notifications/unpulled/{notificationId}` returns a notification that has not pulled previously
+
+To retrieve previously pulled notifications use these 2 endpoints. This effectively acts as a backup:
+
+* `GET /notifications/conversationId/{conversationId}/pulled` returns a list of identifiers for notifications that have been pulled previously 
+* `GET /notifications/pulled/{notificationId}` returns a notification that has been pulled previously
+
 ## Retrieve pull notifications
 
 Use these 2 endpoints to pull notifications have not been pulled yet:

@@ -32,4 +32,7 @@ class EnhancedXmlBuilder @Inject()(appContext: AppContext) {
 
   def toXml(notifications: Notifications, conversationId: UUID): scala.xml.Elem =
     <resource href={s"/notifications/conversationId/$conversationId/"}><link rel="self" href={s"/notifications/conversationId/$conversationId/"}/>{notifications.notifications.map(notificationLocation => toXml(notificationLocation))}</resource>
+
+  def toXml(notifications: Notifications, conversationId: UUID, notificationStatus: NotificationStatus.Value): scala.xml.Elem =
+    <resource href={s"/notifications/conversationId/$conversationId/$notificationStatus/"}><link rel="self" href={s"/notifications/conversationId/$conversationId/$notificationStatus/"}/>{notifications.notifications.map(notificationLocation => toXml(notificationLocation))}</resource>
 }
