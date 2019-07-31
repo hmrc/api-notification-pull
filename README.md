@@ -85,7 +85,7 @@ curl -v -X GET "http://localhost:9649/conversationId/dc7cb9ef-75db-4adc-b2cb-e2b
 
 ### GET `/unpulled`
 
-Get a list of unpulled notification
+Get a list of unpulled notifications
 
 Required Headers:
   - `X-Client-ID`
@@ -148,7 +148,7 @@ curl -v -X GET "http://localhost:9649/unpulled/{notificationId}" \
 
 ### GET `/pulled`
 
-Get a list of pulled notification
+Get a list of pulled notifications
 
 Required Headers:
   - `X-Client-ID`
