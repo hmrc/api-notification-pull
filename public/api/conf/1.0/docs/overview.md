@@ -14,15 +14,15 @@ The Pull Notifications API works in 2 discrete modes. It is recommended that you
 
 1. Retrieve a list of notification identifiers by using the unpulled conversation identifier endpoint `GET /notifications/conversationId/{conversationId}/unpulled`
 
-2. Then iterate over the list of returned notification identifiers by calling `GET /notifications/unpulled/{notificationId}`
+2. To retrieve each notification iterate over the list of returned notification identifiers by calling `GET /notifications/unpulled/{notificationId}`
 
 3. In an exception case, to retrieve a notification again call `GET /notifications/pulled/{notificationId}`
 
 ## Retrieve notifications by conversation identifier
 
-* `GET /notifications/conversationId/{conversationId}/unpulled` returns a list of unpulled notification identifiers for the specified conversation identifier.
-* `GET /notifications/conversationId/{conversationId}/pulled` returns a list of pulled notification identifiers for the specified conversation identifier.
-* `GET /notifications/conversationId/{conversationId}` returns a list of pulled and unpulled notification identifiers for the specified conversation identifier.
+* `GET /notifications/conversationId/{conversationId}/unpulled` returns a list of unpulled notification identifiers for the specified conversation identifier
+* `GET /notifications/conversationId/{conversationId}/pulled` returns a list of pulled notification identifiers for the specified conversation identifier
+* `GET /notifications/conversationId/{conversationId}` returns a list of pulled and unpulled notification identifiers for the specified conversation identifier
 
 ## Retrieve individual notifications
 
@@ -31,8 +31,8 @@ The Pull Notifications API works in 2 discrete modes. It is recommended that you
 
 ## Retrieve notifications by application
 
-* `GET /notifications/unpulled` returns a list of unpulled notification identifiers for your application 
-* `GET /notifications/pulled` returns a list of pulled notification identifiers for your application
+* `GET /notifications/unpulled` returns a list of unpulled notification identifiers for the subscribed application
+* `GET /notifications/pulled` returns a list of pulled notification identifiers for the subscribed application
 
 ## Retrieve and delete notifications (deprecated)
 
