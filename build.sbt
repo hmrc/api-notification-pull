@@ -21,9 +21,10 @@ import sbt.{Resolver, _}
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings, targetJvm}
 import uk.gov.hmrc.PublishingSettings._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import uk.gov.hmrc.gitstamp.GitStampPlugin._
 
 name := "api-notification-pull"
-
+scalaVersion := "2.12.10"
 targetJvm := "jvm-1.8"
 
 
@@ -105,7 +106,7 @@ lazy val commonSettings: Seq[Setting[_]] =
     defaultSettings() ++
     gitStampSettings
 
-lazy val playPublishingSettings: Seq[sbt.Setting[_]] = sbtrelease.ReleasePlugin.releaseSettings ++
+lazy val playPublishingSettings: Seq[sbt.Setting[_]] = Seq(credentials += SbtCredentials) ++
   Seq(credentials += SbtCredentials) ++
   publishAllArtefacts
 
