@@ -4,7 +4,6 @@ object AppDependencies {
 
   private val customsApiCommonVersion = "1.46.0"
   private val hmrcTestVersion = "3.9.0-play-26"
-  private val scalaTestVersion = "3.0.8"
   private val mockitoVersion = "3.2.4"
   private val scalaTestPlusPlayVersion = "3.1.3"
   private val wireMockVersion = "2.26.0"
@@ -13,8 +12,6 @@ object AppDependencies {
   val customsApiCommon = "uk.gov.hmrc" %% "customs-api-common" % customsApiCommonVersion withSources()
 
   val hmrcTest = "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % testScope
-
-  val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % testScope
 
   val mockito = "org.mockito" % "mockito-core" % mockitoVersion % testScope
 
