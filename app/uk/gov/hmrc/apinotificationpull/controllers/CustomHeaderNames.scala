@@ -25,6 +25,8 @@ object CustomHeaderNames {
   val X_CLIENT_ID_HEADER_NAME = "X-Client-ID"
 
   val ACCEPT_HEADER_VALUE = "application/vnd.hmrc.1.0+xml"
+  
+  val X_CONVERSATION_ID_HEADER_NAME = "x-conversation-id"
 
   implicit def getHeadersFromHeaderCarrier[A](implicit hc: HeaderCarrier): SeqOfHeader = {
     hc.headers
