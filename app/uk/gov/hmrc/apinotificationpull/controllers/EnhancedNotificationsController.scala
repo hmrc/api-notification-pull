@@ -105,8 +105,8 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
       enhancedApiNotificationQueueService.getNotificationBy(notificationId, notificationStatus)
         .map {
           case Right(n) =>
-            val conversationId = n.headers.get("X-Conversation-ID")
-            logger.info(s"Notification found for conversationId id: $conversationId with notification id: $notificationId")
+            val conversationId = n.headers.getOrElse("x-conversation-id", "None")
+            logger.info(s"Notification found for conversationId: $conversationId with notification id: $notificationId")
             Result(
               header = ResponseHeader(OK),
               body = HttpEntity.Strict(ByteString(n.payload), n.headers.get(CONTENT_TYPE)))
