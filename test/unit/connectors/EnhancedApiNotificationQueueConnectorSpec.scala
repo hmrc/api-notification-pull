@@ -29,7 +29,7 @@ import uk.gov.hmrc.apinotificationpull.connectors.EnhancedApiNotificationQueueCo
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.customs.api.common.logging.CdsLogger
-import uk.gov.hmrc.http.{NotFoundException, _}
+import uk.gov.hmrc.http.{UpstreamErrorResponse, _}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 import util.UnitSpec
@@ -100,7 +100,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/unpulled/$notificationId"),any(),any())
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(mockHttpResponse))
 
-      val result: Either[HttpException, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
+      val result: Either[UpstreamErrorResponse, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
 
       result shouldBe Right(notification)
     }
@@ -110,31 +110,31 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/pulled/$notificationId"),any(),any())
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.successful(mockHttpResponse))
 
-      val result: Either[HttpException, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Pulled))
+      val result: Either[UpstreamErrorResponse, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Pulled))
 
       result shouldBe Right(notification)
     }
 
     "return a not found exception when a downstream system returns a 404" in new Setup {
 
-      private val notFoundException = new NotFoundException("not found exception")
+      private val notFoundException = UpstreamErrorResponse("not found exception",404)
 
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/unpulled/$notificationId"),any(),any())
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.failed(notFoundException))
 
-      val result: Either[HttpException, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
+      val result: Either[UpstreamErrorResponse, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
 
       result shouldBe Left(notFoundException)
     }
 
     "return a bad request exception when a downstream system returns a 400" in new Setup {
 
-      private val badRequestException = new BadRequestException("bad request exception")
+      private val badRequestException = UpstreamErrorResponse("bad request exception", 400)
 
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/unpulled/$notificationId"),any(),any())
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.failed(badRequestException))
 
-      val result: Either[HttpException, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
+      val result: Either[UpstreamErrorResponse, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
 
       result shouldBe Left(badRequestException)
     }
@@ -146,10 +146,10 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
       when(mockHttpClient.GET[HttpResponse](meq(s"http://api-notification-queue.url/notifications/unpulled/$notificationId"),any(),any())
         (any[HttpReads[HttpResponse]](), any[HeaderCarrier](), any[ExecutionContext])).thenReturn(Future.failed(unauthorisedException))
 
-      val result: Either[HttpException, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
+      val result: Either[UpstreamErrorResponse, Notification] = await(enhancedApiNotificationQueueConnector.getNotificationBy(notificationId, Unpulled))
 
       result.left.get.message shouldBe "unauthorised exception"
-      result.left.get.responseCode shouldBe 500
+      result.left.get.statusCode shouldBe 500
     }
 
     "return an empty list of unpulled notifications when the downstream returns an empty list" in new Setup {

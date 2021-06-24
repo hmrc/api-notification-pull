@@ -55,7 +55,7 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServicesConfig, ht
     http.GET[Notifications](url)
   }
 
-  def getNotificationBy(notificationId: String, notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Either[HttpException, Notification]] = {
+  def getNotificationBy(notificationId: String, notificationStatus: NotificationStatus.Value)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Notification]] = {
 
     val url = s"$serviceBaseUrl/notifications/${notificationStatus.toString}/$notificationId"
     logger.debug(s"Calling get notifications by using url: $url")
@@ -63,10 +63,10 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServicesConfig, ht
       .map { r =>
         Right(Notification(notificationId, r.headers.map(h => h._1 -> h._2.head), r.body))
       }
-      .recover[Either[HttpException, Notification]] {
-      case nfe: NotFoundException => Left(nfe)
-      case bre: BadRequestException => Left(bre)
-      case ise => Left(new InternalServerException(ise.getMessage))
+      .recover[Either[UpstreamErrorResponse, Notification]] {
+      case nfe: UpstreamErrorResponse if nfe.statusCode == 404 => Left(nfe)
+      case bre: UpstreamErrorResponse if bre.statusCode == 400 => Left(bre)
+      case ise => Left(UpstreamErrorResponse(ise.getMessage, 500))
     }
   }
 }

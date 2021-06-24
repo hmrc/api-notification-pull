@@ -20,7 +20,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.getHeadersFromHeaderCarrier
 import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, NotFoundException}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
@@ -42,13 +42,13 @@ class ApiNotificationQueueConnector @Inject()(config: ServicesConfig, http: Http
     logger.debug(s"Getting notification by id using url: $url")
     http.GET[HttpResponse](url)
       .map { r =>
-        if(r.status == 404){throw new NotFoundException("")}
+        if(r.status == 404){throw UpstreamErrorResponse("", 404)}
 
         logger.debug(s"Notification received successfully with id: $notificationId")
         Some(Notification(notificationId, r.headers.map(h => h._1 -> h._2.head), r.body))
       }
       .recover[Option[Notification]] {
-      case _: NotFoundException =>
+      case e: UpstreamErrorResponse  if (e.statusCode == 404) =>
         logger.debug(s"Notification not found with id: $notificationId")
         None
     }
