@@ -30,9 +30,6 @@ object CustomHeaderNames {
   
   val X_CLIENT_AUTHORIZATION_TOKEN = "x-client-authorization-token"
 
-  val customHeadersNames = Seq(X_CLIENT_ID_HEADER_NAME,ACCEPT_HEADER_VALUE,X_CLIENT_ID_HEADER_NAME,X_CLIENT_AUTHORIZATION_TOKEN)
-
-
   implicit def getHeadersFromHeaderCarrier[A](implicit hc: HeaderCarrier): SeqOfHeader = {
     val headerNames = HeaderNames.explicitlyIncludedHeaders
     hc.headers(headerNames) ++ hc.extraHeaders

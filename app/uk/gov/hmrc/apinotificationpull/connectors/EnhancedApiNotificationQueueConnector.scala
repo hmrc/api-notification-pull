@@ -60,8 +60,10 @@ class EnhancedApiNotificationQueueConnector @Inject()(config: ServicesConfig, ht
     val url = s"$serviceBaseUrl/notifications/${notificationStatus.toString}/$notificationId"
     logger.debug(s"Calling get notifications by using url: $url")
     http.GET[HttpResponse](url)
-      .map { r =>
-        Right(Notification(notificationId, r.headers.map(h => h._1 -> h._2.head), r.body))
+      .map {
+        case r if r.status == 404 =>throw UpstreamErrorResponse("", 404)
+        case r if r.status == 400 =>throw UpstreamErrorResponse("", 400)
+        case r => Right(Notification(notificationId, r.headers.map(h => h._1 -> h._2.head), r.body))
       }
       .recover[Either[UpstreamErrorResponse, Notification]] {
       case nfe: UpstreamErrorResponse if nfe.statusCode == 404 => Left(nfe)
