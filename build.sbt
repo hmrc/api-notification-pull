@@ -45,7 +45,6 @@ lazy val microservice = (project in file("."))
   .enablePlugins(PlayScala)
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
   .enablePlugins(SbtDistributablesPlugin)
-  .enablePlugins(SbtArtifactory)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
   .configs(testConfig: _*)
   .settings(

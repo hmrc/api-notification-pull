@@ -27,7 +27,7 @@ import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueServ
 import uk.gov.hmrc.apinotificationpull.util.EnhancedXmlBuilder
 import uk.gov.hmrc.apinotificationpull.validators.HeaderValidator
 import uk.gov.hmrc.customs.api.common.controllers.ErrorResponse.{ErrorInternalServerError, ErrorNotFound, errorBadRequest}
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import java.util.UUID
@@ -117,7 +117,6 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
             logger.info(s"$badRequestText for id: $notificationId", bre)
             errorBadRequest(badRequestText).XmlResult
           case Left(e) =>
-            println(e.statusCode)
             logger.error(s"Internal server error for notification id: $notificationId", e)
             ErrorInternalServerError.XmlResult
         }.recover(recovery(request))
