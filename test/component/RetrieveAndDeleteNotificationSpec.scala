@@ -17,10 +17,10 @@
 package component
 
 import java.util.UUID
-
 import com.github.tomakehurst.wiremock.client.WireMock.{status => _, _}
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import unit.util.RequestHeaders.X_CLIENT_ID_HEADER_NAME
@@ -65,7 +65,7 @@ class RetrieveAndDeleteNotificationSpec extends ComponentSpec with Eventually wi
       Then("You will receive the notification")
       status(result) shouldBe OK
       contentAsString(result).stripMargin shouldBe notificationBody
-      await(result).header.headers should contain allOf(header1, header2)
+      result.futureValue.header.headers should contain allOf(header1, header2)
 
       And("The notification will be DELETED")
       verify(eventually(deleteRequestedFor(urlMatching(s"/notification/$notificationId"))))
