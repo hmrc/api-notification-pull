@@ -101,6 +101,8 @@ paths:
                           <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                           <link rel="notification" href="/notifications/pulled/1b941d3a-84cd-4127-a80f-36fa1f019359"/>
                        </resource>
+      security:
+        - applicationRestricted: [ ]
   /notifications/conversationId/{conversationId}/unpulled:
     get:
       tags:
@@ -132,7 +134,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
+          description: OAuth 2.0 Bearer Token with applicationRestricted scope.
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -149,6 +151,8 @@ paths:
                           <link rel="self" href="/notifications/unpulled/"/>
                           <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                        </resource>
+      security:
+        - applicationRestricted: []
   /notifications/conversationId/{conversationId}/pulled:
     get:
       tags:
@@ -197,6 +201,8 @@ paths:
                           <link rel="self" href="/notifications/pulled/"/>
                           <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                        </resource>
+      security:
+        - applicationRestricted: [ ]
   /notifications/unpulled:
     get:
       tags:
@@ -237,6 +243,8 @@ paths:
                           <link rel="self" href="/notifications/unpulled/"/>
                           <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                        </resource>
+      security:
+        - applicationRestricted: [ ]
   /notifications/unpulled/{notificationId}:
     get:
       tags:
@@ -340,6 +348,8 @@ paths:
                          <code>NOT_FOUND</code>
                          <message>Resource was not found</message>
                        </errorResponse>
+      security:
+        - applicationRestricted: [ ]
   /notifications/pulled:
     get:
       tags:
@@ -380,6 +390,8 @@ paths:
                          <link rel="self" href="/notifications/pulled/"/>
                          <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                        </resource>
+      security:
+        - applicationRestricted: [ ]
   /notifications/pulled/{notificationId}:
     get:
       tags:
@@ -483,6 +495,8 @@ paths:
                          <code>NOT_FOUND</code>
                          <message>Resource was not found</message>
                        </errorResponse>
+      security:
+        - applicationRestricted: [ ]
   /notifications/:
     get:
       tags:
@@ -524,6 +538,8 @@ paths:
                          <link rel="self" href="/notifications/"/>
                          <link rel="notification" href="/notifications/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
                        </resource>
+      security:
+        - applicationRestricted: [ ]
   /notifications/{id}:
     delete:
       tags:
@@ -557,7 +573,19 @@ paths:
           content:
             application/xml:
               example: <example>Saved Message</example>
-components: ''
+      security:
+        - applicationRestricted: [ ]
+components:
+  securitySchemes:
+    applicationRestricted:
+      type: oauth2
+      description: |
+        HMRC supports OAuth 2.0 for authenticating application restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
+        See https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints for details.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
+          scopes: {}
 tags:
 - name: Notifications
   description: ''
