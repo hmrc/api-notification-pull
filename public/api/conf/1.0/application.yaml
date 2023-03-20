@@ -299,26 +299,26 @@ paths:
                        </_2_1:Declaration>
                        </_2_1:Response>
                        </_2:MetaData>
-              '400':
-                description:
-                headers: { }
-                content:
-                  application/xml:
-                    example: <?xml version="1.0" encoding="UTF-8"?>
-                             <errorResponse>
-                             <code>BAD_REQUEST</code>
-                             <message>Notification is unpulled</message>
-                             </errorResponse>
-              '404':
-                    description:
-                    headers: { }
-                    content:
-                      application/xml:
-                          example: <?xml version="1.0" encoding="UTF-8"?>
-                                   <errorResponse>
-                                   <code>NOT_FOUND</code>
-                                   <message>Resource was not found</message>
-                                   </errorResponse>
+        '400':
+          description: ''
+          headers: {}
+          content:
+            application/xml:
+              example: <?xml version="1.0" encoding="UTF-8"?>
+                       <errorResponse>
+                       <code>BAD_REQUEST</code>
+                       <message>Notification is unpulled</message>
+                       </errorResponse>
+        '404':
+          description: ''
+          headers: {}
+          content:
+            application/xml:
+              example: <?xml version="1.0" encoding="UTF-8"?>
+                       <errorResponse>
+                       <code>NOT_FOUND</code>
+                       <message>Resource was not found</message>
+                       </errorResponse>
   /notifications/pulled:
     get:
       tags:
@@ -401,7 +401,8 @@ paths:
           headers: { }
           content:
             application/xml:
-              example: <?xml version="1.0" encoding="UTF-8"?>
+              example: |
+                       <?xml version="1.0" encoding="UTF-8"?>
                        <_2:MetaData xmlns:_2="urn:wco:datamodel:WCO:DocumentMetaData-DMS:2"><_2:WCODataModelVersionCode>3.6</_2:WCODataModelVersionCode><_2:WCOTypeName>RES</_2:WCOTypeName><_2:ResponsibleCountryCode/><_2:ResponsibleAgencyName/><_2:AgencyAssignedCustomizationCode/><_2:AgencyAssignedCustomizationVersionCode/><_2_1:Response xmlns:_2_1="urn:wco:datamodel:WCO:RES-DMS:2">
                        <_2_1:FunctionCode>03</_2_1:FunctionCode>
                        <_2_1:FunctionalReferenceID>0f3ec64eec704999995ddf5a3ca9cc0b</_2_1:FunctionalReferenceID>
@@ -432,22 +433,22 @@ paths:
                        </_2_1:Declaration>
                        </_2_1:Response>
                        </_2:MetaData>
-              '400':
-                description:
-                headers: { }
-                content:
-                  application/xml:
-                    example: <?xml version="1.0" encoding="UTF-8"?>
+        '400':
+          description:
+          headers: { }
+          content:
+            application/xml:
+              example: <?xml version="1.0" encoding="UTF-8"?>
                              <errorResponse>
                              <code>BAD_REQUEST</code>
                              <message>Notification is unpulled</message>
                              </errorResponse>
-              '404':
-                  description:
-                  headers: { }
-                  content:
-                  application/xml:
-                  example: <?xml version="1.0" encoding="UTF-8"?>
+        '404':
+          description:
+          headers: { }
+          content:
+            application/xml:
+              example: <?xml version="1.0" encoding="UTF-8"?>
                            <errorResponse>
                            <code>NOT_FOUND</code>
                            <message>Resource was not found</message>
