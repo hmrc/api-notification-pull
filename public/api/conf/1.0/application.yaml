@@ -461,11 +461,11 @@ paths:
           headers: { }
           content:
             application/xml:
-              example: |
-                       <resource href="/notifications/">
-                         <link rel="self" href="/notifications/"/>
-                         <link rel="notification" href="/notifications/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-                       </resource>
+              schema:
+                $ref: '#/components/schemas/resource'
+              examples:
+                objectExample:
+                  $ref: '#/components/examples/resourceExample4'
       security:
         - applicationRestricted: [ ]
   /notifications/{id}:
@@ -500,7 +500,11 @@ paths:
           headers: { }
           content:
             application/xml:
-              example: <example>Saved Message</example>
+              schema:
+                $ref: '#/components/schemas/testResponse'
+              examples:
+                objectExample:
+                  $ref: '#/components/examples/testResponseExample'
       security:
         - applicationRestricted: [ ]
 components:
@@ -553,6 +557,8 @@ components:
       <code></code>
       <message><message>
       </errorResponse>
+    testResponse:
+      <example></example>
   examples:
     resourceExample1:
       summary: A sample Resource
@@ -576,6 +582,13 @@ components:
         <link rel="self" href="/notifications/pulled/"/>
         <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
         </resource>'
+    resourceExample4:
+        summary: A sample Resource
+        value:
+          '<resource href="/notifications/">
+          <link rel="self" href="/notifications/"/>
+          <link rel="notification" href="/notifications/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+          </resource>'
     metaDataExample1:
       summary: A sample MetaData
       value:
@@ -629,6 +642,10 @@ components:
         <code>NOT_FOUND</code>
         <message>Resource was not found</message>
         </errorResponse>'
+    testResponseExample:
+       summary: A sample error response
+       value:
+         '<example>Saved Message</example>'
   securitySchemes:
     applicationRestricted:
       type: oauth2
