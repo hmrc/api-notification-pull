@@ -18,11 +18,19 @@ info:
     You can get all of the notifications for your application, or you can get them for a given conversation. We recommend getting them by conversation.
     
     # Getting notifications for a given conversation
-    1. Get a list of unpulled notification identifiers for a given conversation by calling GET /notifications/conversationId/{conversationId}/unpulled
+    1. Get a list of unpulled notification identifiers for a given conversation by calling
+    
+    `GET /notifications/conversationId/{conversationId}/unpulled`
 
-    2. Iterate over this list of notification identifiers and get each unpulled notification from the unpulled queue by calling GET /notifications/unpulled/{notificationId}. When you get a notification from the unpulled queue, it will move to the pulled queue.
+    2. Iterate over this list of notification identifiers and get each unpulled notification from the unpulled queue by calling
+    
+    `GET /notifications/unpulled/{notificationId}`
+    
+    , when you get a notification from the unpulled queue, it will move to the pulled queue.
 
-    3. To get a notification again after you have retrieved it, get it from the pulled queue by calling GET /notifications/pulled/{notificationId}
+    3. To get a notification again after you have retrieved it, get it from the pulled queue by calling
+    
+    `GET /notifications/pulled/{notificationId}`
 
     # Versioning
     When an API changes in a way that is backwards-incompatible, we increase the version number of the API. See our [reference guide](https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/versioning.md) for more on versioning.
@@ -67,7 +75,7 @@ paths:
           example: 1446a875-eaa1-4d7a-903e-0604166d9557
       - name: Accept
         in: header
-        description: Specifies the version of the API that you want to call. See versioning.
+        description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
         schema:
           type: string
           example: application/vnd.hmrc.1.0+xml
@@ -75,7 +83,7 @@ paths:
         required: true
       - name: Authorisation
         in: header
-        description: An OAuth 2.0 Bearer Token.
+        description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
         schema:
           type: string
           example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -101,7 +109,7 @@ paths:
       description: |-
         Get a list of unpulled notification identifiers for the given conversation identifier
         #### Authorisation
-        This endpoint is [application-restricted](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints) and requires an Authorization header containing an OAuth 2.0 Bearer Token.
+        This endpoint is [application-restricted](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints) and requires an Authorization header containing An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
 
         See also [fraud prevention](https://developer.service.hmrc.gov.uk/guides/fraud-prevention/).
       operationId: Getallnotificationsforaconversation
@@ -116,7 +124,7 @@ paths:
             example: 1446a875-eaa1-4d7a-903e-0604166d9557
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -124,7 +132,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -164,7 +172,7 @@ paths:
             example: 1446a875-eaa1-4d7a-903e-0604166d9557
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -172,7 +180,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -204,7 +212,7 @@ paths:
       parameters:
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -212,7 +220,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -252,7 +260,7 @@ paths:
             example: 3851c039-107a-42c9-94a9-180893e5f0d5
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -260,7 +268,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -347,7 +355,7 @@ paths:
       parameters:
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -355,7 +363,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -395,7 +403,7 @@ paths:
             example: 3851c039-107a-42c9-94a9-180893e5f0d5
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -403,7 +411,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -491,7 +499,7 @@ paths:
       parameters:
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -499,7 +507,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -528,7 +536,7 @@ paths:
       parameters:
         - name: Accept
           in: header
-          description: Specifies the version of the API that you want to call. See versioning.
+          description: Specifies the version of the API that you want to call. See [versioning](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning).
           schema:
             type: string
             example: application/vnd.hmrc.1.0+xml
@@ -536,7 +544,7 @@ paths:
           required: true
         - name: Authorisation
           in: header
-          description: An OAuth 2.0 Bearer Token.
+          description: An [OAuth 2.0 Bearer Token](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints).
           schema:
             type: string
             example: Bearer 59fc92c1cdf0b8ef1f138a702effdbd2
@@ -548,365 +556,8 @@ paths:
           headers: { }
           content:
             application/xml:
-              example: |
-                       <example>
-                       Saved Message
-                       </example>
-components:
-  schemas:
-    errorResponse:
-      title: errorResponse
-      required:
-      - code
-      type: object
-      properties:
-        code:
-          type: string
-    DateTimeString:
-      title: DateTimeString
-      required:
-      - formatCode
-      type: object
-      properties:
-        formatCode:
-          type: integer
-          format: int32
-          xml:
-            name: formatCode
-            attribute: true
-            wrapped: false
-      xml:
-        name: DateTimeString
-        namespace: urn:wco:datamodel:WCO:Response_DS:DMS:2
-        prefix: _2_2
-        attribute: false
-        wrapped: false
-    Declaration:
-      title: Declaration
-      required:
-      - FunctionalReferenceID
-      - ID
-      - RejectionDateTime
-      - VersionID
-      type: object
-      properties:
-        FunctionalReferenceID:
-          type: string
-          xml:
-            name: FunctionalReferenceID
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        ID:
-          type: string
-          xml:
-            name: ID
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        RejectionDateTime:
-          allOf:
-          - $ref: '#/components/schemas/RejectionDateTime'
-          - xml:
-              name: RejectionDateTime
-              namespace: urn:wco:datamodel:WCO:RES-DMS:2
-              prefix: _2_1
-              attribute: false
-              wrapped: false
-        VersionID:
-          type: integer
-          format: int32
-          xml:
-            name: VersionID
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-      xml:
-        name: Declaration
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
-    Error:
-      title: Error
-      required:
-      - ValidationCode
-      - Pointer
-      type: object
-      properties:
-        ValidationCode:
-          type: string
-          xml:
-            name: ValidationCode
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        Pointer:
-          allOf:
-          - $ref: '#/components/schemas/Pointer'
-          - xml:
-              name: Pointer
-              namespace: urn:wco:datamodel:WCO:RES-DMS:2
-              prefix: _2_1
-              attribute: false
-              wrapped: false
-      xml:
-        name: Error
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
-    errorResponse2:
-      title: errorResponse2
-      required:
-      - code
-      - message
-      type: object
-      properties:
-        code:
-          type: string
-          xml:
-            name: code
-            namespace: ''
-            attribute: false
-            wrapped: false
-        message:
-          type: string
-          xml:
-            name: message
-            namespace: ''
-            attribute: false
-            wrapped: false
-      xml:
-        name: errorResponse
-        namespace: ''
-        attribute: false
-        wrapped: false
-    IssueDateTime:
-      title: IssueDateTime
-      required:
-      - DateTimeString
-      type: object
-      properties:
-        DateTimeString:
-          allOf:
-          - $ref: '#/components/schemas/DateTimeString'
-          - xml:
-              name: DateTimeString
-              namespace: urn:wco:datamodel:WCO:Response_DS:DMS:2
-              prefix: _2_2
-              attribute: false
-              wrapped: false
-      xml:
-        name: IssueDateTime
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
-    link:
-      title: link
-      required:
-      - rel
-      - href
-      type: object
-      properties:
-        rel:
-          type: string
-          xml:
-            name: rel
-            attribute: true
-            wrapped: false
-        href:
-          type: string
-          xml:
-            name: href
-            attribute: true
-            wrapped: false
-      xml:
-        name: link
-        namespace: ''
-        attribute: false
-        wrapped: false
-    MetaData:
-      title: MetaData
-      required:
-      - WCODataModelVersionCode
-      - WCOTypeName
-      - Response
-      type: object
-      properties:
-        WCODataModelVersionCode:
-          type: number
-          xml:
-            name: WCODataModelVersionCode
-            namespace: urn:wco:datamodel:WCO:DocumentMetaData-DMS:2
-            prefix: _2
-            attribute: false
-            wrapped: false
-        WCOTypeName:
-          type: string
-          xml:
-            name: WCOTypeName
-            namespace: urn:wco:datamodel:WCO:DocumentMetaData-DMS:2
-            prefix: _2
-            attribute: false
-            wrapped: false
-        Response:
-          allOf:
-          - $ref: '#/components/schemas/Response'
-          - xml:
-              name: Response
-              namespace: urn:wco:datamodel:WCO:RES-DMS:2
-              prefix: _2_1
-              attribute: false
-              wrapped: false
-      xml:
-        name: MetaData
-        namespace: urn:wco:datamodel:WCO:DocumentMetaData-DMS:2
-        prefix: _2
-        attribute: false
-        wrapped: false
-    Pointer:
-      title: Pointer
-      required:
-      - DocumentSectionCode
-      - TagID
-      type: object
-      properties:
-        DocumentSectionCode:
-          type: string
-          xml:
-            name: DocumentSectionCode
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        TagID:
-          type: string
-          xml:
-            name: TagID
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-      xml:
-        name: Pointer
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
-    RejectionDateTime:
-      title: RejectionDateTime
-      required:
-      - DateTimeString
-      type: object
-      properties:
-        DateTimeString:
-          allOf:
-          - $ref: '#/components/schemas/DateTimeString'
-          - xml:
-              name: DateTimeString
-              namespace: urn:wco:datamodel:WCO:Response_DS:DMS:2
-              prefix: _2_2
-              attribute: false
-              wrapped: false
-      xml:
-        name: RejectionDateTime
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
-    resource:
-      title: resource
-      required:
-      - href
-      - link
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            name: href
-            attribute: true
-            wrapped: false
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/link'
-          description: ''
-          xml:
-            namespace: ''
-            attribute: false
-            wrapped: false
-      xml:
-        name: resource
-        namespace: ''
-        attribute: false
-        wrapped: false
-    Response:
-      title: Response
-      required:
-      - FunctionCode
-      - FunctionalReferenceID
-      - IssueDateTime
-      - Error
-      - Declaration
-      type: object
-      properties:
-        FunctionCode:
-          type: string
-          xml:
-            name: FunctionCode
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        FunctionalReferenceID:
-          type: string
-          xml:
-            name: FunctionalReferenceID
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        IssueDateTime:
-          allOf:
-          - $ref: '#/components/schemas/IssueDateTime'
-          - xml:
-              name: IssueDateTime
-              namespace: urn:wco:datamodel:WCO:RES-DMS:2
-              prefix: _2_1
-              attribute: false
-              wrapped: false
-        Error:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: ''
-          xml:
-            namespace: urn:wco:datamodel:WCO:RES-DMS:2
-            prefix: _2_1
-            attribute: false
-            wrapped: false
-        Declaration:
-          allOf:
-          - $ref: '#/components/schemas/Declaration'
-          - xml:
-              name: Declaration
-              namespace: urn:wco:datamodel:WCO:RES-DMS:2
-              prefix: _2_1
-              attribute: false
-              wrapped: false
-      xml:
-        name: Response
-        namespace: urn:wco:datamodel:WCO:RES-DMS:2
-        prefix: _2_1
-        attribute: false
-        wrapped: false
+              example: <example>Saved Message</example>
+components: ''
 tags:
 - name: Notifications
   description: ''
