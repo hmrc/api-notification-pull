@@ -99,7 +99,7 @@ paths:
                 $ref: '#/components/schemas/resource'
               examples:
                 objectExample:
-                  $ref: '#/components/examples/resourceExample'
+                  $ref: '#/components/examples/resourceExample1'
       security:
         - applicationRestricted: [ ]
   /notifications/conversationId/{conversationId}/unpulled:
@@ -148,12 +148,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/resource'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<resource href="/notifications/unpulled/">
-                          <link rel="self" href="/notifications/unpulled/"/>
-                          <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-                          </resource>'
+                objectExample:
+                  $ref: '#/components/examples/resourceExample2'
       security:
         - applicationRestricted: []
   /notifications/conversationId/{conversationId}/pulled:
@@ -202,12 +198,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/resource'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<resource href="/notifications/pulled/">
-                          <link rel="self" href="/notifications/pulled/"/>
-                          <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-                          </resource>'
+                objectExample:
+                  $ref: '#/components/examples/resourceExample3'
       security:
         - applicationRestricted: [ ]
   /notifications/unpulled:
@@ -248,12 +240,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/resource'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<resource href="/notifications/unpulled/">
-                          <link rel="self" href="/notifications/unpulled/"/>
-                          <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-                          </resource>'
+                objectExample:
+                  $ref: '#/components/examples/resourceExample2'
       security:
         - applicationRestricted: [ ]
   /notifications/unpulled/{notificationId}:
@@ -302,44 +290,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/metadata'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<_2:MetaData xmlns:_2="urn:wco:datamodel:WCO:DocumentMetaData-DMS:2">
-                         <_2:WCODataModelVersionCode>3.6</_2:WCODataModelVersionCode>
-                         <_2:WCOTypeName>RES</_2:WCOTypeName>
-                         <_2:ResponsibleCountryCode/>
-                         <_2:ResponsibleAgencyName/>
-                         <_2:AgencyAssignedCustomizationCode/><_2:AgencyAssignedCustomizationVersionCode/>
-                         <_2_1:Response xmlns:_2_1="urn:wco:datamodel:WCO:RES-DMS:2">
-                           <_2_1:FunctionCode>03</_2_1:FunctionCode>
-                           <_2_1:FunctionalReferenceID>0f3ec64eec704999995ddf5a3ca9cc0b</_2_1:FunctionalReferenceID>
-                           <_2_1:IssueDateTime>
-                           <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
-                           </_2_1:IssueDateTime>
-                           <_2_1:Error>
-                             <_2_1:ValidationCode>CDS12014</_2_1:ValidationCode>
-                             <_2_1:Pointer>
-                               <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
-                               <_2_1:TagID>D013</_2_1:TagID>
-                             </_2_1:Pointer>
-                           </_2_1:Error>
-                           <_2_1:Error>
-                             <_2_1:ValidationCode>CDS12015</_2_1:ValidationCode>
-                             <_2_1:Pointer>
-                               <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
-                               <_2_1:TagID>D014</_2_1:TagID>
-                             </_2_1:Pointer>
-                           </_2_1:Error>
-                           <_2_1:Declaration>
-                             <_2_1:FunctionalReferenceID>gq8lPty99999NLgUQMSAmg</_2_1:FunctionalReferenceID>
-                             <_2_1:ID>19GB20GF2F99999VR4</_2_1:ID>
-                             <_2_1:RejectionDateTime>
-                               <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
-                             </_2_1:RejectionDateTime>
-                             <_2_1:VersionID>1</_2_1:VersionID>
-                           </_2_1:Declaration>
-                         </_2_1:Response>
-                       </_2:MetaData>'
+                objectExample:
+                  $ref: '#/components/examples/metaDataExample1'
         '400':
           description: ''
           headers: {}
@@ -348,12 +300,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorResponse'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<errorResponse>
-                            <code>BAD_REQUEST</code>
-                            <message>Notification is unpulled</message>
-                          </errorResponse>'
+                objectExample:
+                  $ref: '#/components/examples/errorResponseExample1'
         '404':
           description: ''
           headers: {}
@@ -362,12 +310,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorResponse'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<errorResponse>
-                           <code>NOT_FOUND</code>
-                           <message>Resource was not found</message>
-                         </errorResponse>'
+                objectExample:
+                  $ref: '#/components/examples/errorResponseExample2'
       security:
         - applicationRestricted: [ ]
   /notifications/pulled:
@@ -407,13 +351,8 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/resource'
-              examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<resource href="/notifications/pulled/">
-                           <link rel="self" href="/notifications/pulled/"/>
-                           <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-                          </resource>'
+                objectExample:
+                  $ref: '#/components/examples/errorResponseExample3'
       security:
         - applicationRestricted: [ ]
   /notifications/pulled/{notificationId}:
@@ -460,47 +399,10 @@ paths:
           content:
             application/xml:
               schema:
-                $ref: '#/components/schemas/_2:MetaData'
+                $ref: '#/components/schemas/metaData'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<?xml version="1.0" encoding="UTF-8"?>
-                         <_2:MetaData xmlns:_2="urn:wco:datamodel:WCO:DocumentMetaData-DMS:2">
-                         <_2:WCODataModelVersionCode>3.6</_2:WCODataModelVersionCode>
-                         <_2:WCOTypeName>RES</_2:WCOTypeName>
-                         <_2:ResponsibleCountryCode/>
-                         <_2:ResponsibleAgencyName/>
-                         <_2:AgencyAssignedCustomizationCode/><_2:AgencyAssignedCustomizationVersionCode/>
-                         <_2_1:Response xmlns:_2_1="urn:wco:datamodel:WCO:RES-DMS:2">
-                           <_2_1:FunctionCode>03</_2_1:FunctionCode>
-                           <_2_1:FunctionalReferenceID>0f3ec64eec704999995ddf5a3ca9cc0b</_2_1:FunctionalReferenceID>
-                           <_2_1:IssueDateTime>
-                           <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
-                           </_2_1:IssueDateTime>
-                           <_2_1:Error>
-                           <_2_1:ValidationCode>CDS12014</_2_1:ValidationCode>
-                           <_2_1:Pointer>
-                             <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
-                             <_2_1:TagID>D013</_2_1:TagID>
-                           </_2_1:Pointer>
-                           </_2_1:Error>
-                           <_2_1:Error>
-                             <_2_1:ValidationCode>CDS12015</_2_1:ValidationCode>
-                             <_2_1:Pointer>
-                               <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
-                               <_2_1:TagID>D014</_2_1:TagID>
-                             </_2_1:Pointer>
-                           </_2_1:Error>
-                           <_2_1:Declaration>
-                             <_2_1:FunctionalReferenceID>gq8lPty99999NLgUQMSAmg</_2_1:FunctionalReferenceID>
-                             <_2_1:ID>19GB20GF2F99999VR4</_2_1:ID>
-                             <_2_1:RejectionDateTime>
-                               <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
-                             </_2_1:RejectionDateTime>
-                             <_2_1:VersionID>1</_2_1:VersionID>
-                           </_2_1:Declaration>
-                         </_2_1:Response>
-                       </_2:MetaData>'
+                objectExample:
+                  $ref: '#/components/examples/metaDataExample1'
         '400':
           description: ''
           headers: { }
@@ -509,12 +411,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorResponse'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<errorResponse>
-                            <code>BAD_REQUEST</code>
-                            <message>Notification is unpulled</message>
-                          </errorResponse>'
+                objectExample:
+                  $ref: '#/components/examples/errorResponseExample1'
         '404':
           description: ''
           headers: { }
@@ -523,12 +421,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorResponse'
               examples:
-                xml:
-                  summary: A sample XML response
-                  value: '<errorResponse>
-                            <code>NOT_FOUND</code>
-                            <message>Resource was not found</message>
-                          </errorResponse>'
+                objectExample:
+                  $ref: '#/components/examples/errorResponseExample2'
       security:
         - applicationRestricted: [ ]
   /notifications/:
@@ -660,13 +554,81 @@ components:
       <message><message>
       </errorResponse>
   examples:
-    resourceExample:
-      summary: A sample XML response
-      value: <resource href="/notifications/conversationId/4cdc771e-c77a-438f-b293-e11ac4cc4e2e/">
-               <link rel="self" href="/notifications/conversationId/4cdc771e-c77a-438f-b293-e11ac4cc4e2e"/>
-               <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
-               <link rel="notification" href="/notifications/pulled/1b941d3a-84cd-4127-a80f-36fa1f019359"/>
-             </resource>
+    resourceExample1:
+      summary: A sample Resource
+      value:
+        '<resource href="/notifications/conversationId/4cdc771e-c77a-438f-b293-e11ac4cc4e2e/">
+        <link rel="self" href="/notifications/conversationId/4cdc771e-c77a-438f-b293-e11ac4cc4e2e"/>
+        <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+        <link rel="notification" href="/notifications/pulled/1b941d3a-84cd-4127-a80f-36fa1f019359"/>
+        </resource>'
+    resourceExample2:
+      summary: A sample Resource
+      value:
+        '<resource href="/notifications/unpulled/">
+        <link rel="self" href="/notifications/unpulled/"/>
+        <link rel="notification" href="/notifications/unpulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+        </resource>'
+    resourceExample3:
+      summary : A sample Resource
+      value:
+        '<resource href="/notifications/pulled/">
+        <link rel="self" href="/notifications/pulled/"/>
+        <link rel="notification" href="/notifications/pulled/7ab99957-b138-4f09-888e-ab4e8107bbe0"/>
+        </resource>'
+    metaDataExample1:
+      summary: A sample MetaData
+      value:
+          '<_2:MetaData xmlns:_2="urn:wco:datamodel:WCO:DocumentMetaData-DMS:2">
+          <_2:WCODataModelVersionCode>3.6</_2:WCODataModelVersionCode>
+          <_2:WCOTypeName>RES</_2:WCOTypeName>
+          <_2:ResponsibleCountryCode/>
+          <_2:ResponsibleAgencyName/>
+          <_2:AgencyAssignedCustomizationCode/><_2:AgencyAssignedCustomizationVersionCode/>
+          <_2_1:Response xmlns:_2_1="urn:wco:datamodel:WCO:RES-DMS:2">
+          <_2_1:FunctionCode>03</_2_1:FunctionCode>
+          <_2_1:FunctionalReferenceID>0f3ec64eec704999995ddf5a3ca9cc0b</_2_1:FunctionalReferenceID>
+          <_2_1:IssueDateTime>
+          <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
+          </_2_1:IssueDateTime>
+          <_2_1:Error>
+          <_2_1:ValidationCode>CDS12014</_2_1:ValidationCode>
+          <_2_1:Pointer>
+          <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
+          <_2_1:TagID>D013</_2_1:TagID>
+          </_2_1:Pointer>
+          </_2_1:Error>
+          <_2_1:Error>
+          <_2_1:ValidationCode>CDS12015</_2_1:ValidationCode>
+          <_2_1:Pointer>
+          <_2_1:DocumentSectionCode>42A</_2_1:DocumentSectionCode>
+          <_2_1:TagID>D014</_2_1:TagID>
+          </_2_1:Pointer>
+          </_2_1:Error>
+          <_2_1:Declaration>
+          <_2_1:FunctionalReferenceID>gq8lPty99999NLgUQMSAmg</_2_1:FunctionalReferenceID>
+          <_2_1:ID>19GB20GF2F99999VR4</_2_1:ID>
+          <_2_1:RejectionDateTime>
+          <_2_2:DateTimeString formatCode="304" xmlns:_2_2="urn:wco:datamodel:WCO:Response_DS:DMS:2">20190220165953Z</_2_2:DateTimeString>
+          </_2_1:RejectionDateTime>
+          <_2_1:VersionID>1</_2_1:VersionID>
+          </_2_1:Declaration>
+          </_2_1:Response>
+          </_2:MetaData>'
+    errorResponseExample1:
+      summary: A sample error response
+      value:
+        '<errorResponse>
+        <code>BAD_REQUEST</code>
+        <message>Notification is unpulled</message>
+        </errorResponse>'
+    errorResponseExample2:
+      summary: A sample error response
+      value:
+        '<errorResponse>
+        <code>NOT_FOUND</code>
+        <message>Resource was not found</message>
+        </errorResponse>'
   securitySchemes:
     applicationRestricted:
       type: oauth2
