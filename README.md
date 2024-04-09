@@ -9,7 +9,7 @@ The API Notification Pull service offers endpoints designed for the identificati
 - Run with test endpoints: `sbt 'run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes'`
 
 ##  Service Manager Profiles
-The API Notification service can be run locally from Service Manager, using the following profiles:
+The API Notification Pull service can be run locally from Service Manager, using the following profiles:
 
 
 | Profile Details                       | Command                                                           | Description                                                    |
@@ -36,8 +36,8 @@ To run performance tests, see [here](https://github.com/hmrc/api-notification-pu
 For Notification Pull API documentation, see [here](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/api-notification-pull/1.0/oas/page).
 
 
-### API Notification specific routes
-| Path - internal routes prefixed by `/notification`       | Supported Methods | Description                                                                           |
+### API Notification Pull specific routes
+| Path - internal routes prefixed by `/notifications`      | Supported Methods | Description                                                                           |
 |----------------------------------------------------------|:-----------------:|---------------------------------------------------------------------------------------|
 | `/notifications/:notificationId`                         |      DELETE       | Retrieves and deletes a notification from `api-notification-queue`.                   |
 | `/notifications/`                                        |        GET        | Retrieves all notifications, for a specific client id, from `api-notification-queue`. |
