@@ -37,17 +37,17 @@ For Notification Pull API documentation, see [here](https://developer.service.hm
 
 
 ### API Notification Pull specific routes
-| Path - internal routes prefixed by `/notifications`      | Supported Methods | Description                                                                           |
-|----------------------------------------------------------|:-----------------:|---------------------------------------------------------------------------------------|
-| `/notifications/:notificationId`                         |      DELETE       | Retrieves and deletes a notification from `api-notification-queue`.                   |
-| `/notifications/`                                        |        GET        | Retrieves all notifications, for a specific client id, from `api-notification-queue`. |
-| `/notifications/unpulled/:notificationId`                |        GET        | Get an unpulled notification by notification ID.                                      |
-| `/notifications/unpulled`                                |        GET        | Get a list of unpulled notifications.                                                 |
-| `/notifications/pulled/:notificationId`                  |        GET        | Get a pulled notification by notification ID.                                         |
-| `/notifications/pulled`                                  |        GET        | Get a list of pulled notifications.                                                   |
-| `/notifications/conversationId/:conversationId`          |        GET        | Get a list of notifications by conversation ID.                                       |
-| `/notifications/conversationId/:conversationId/unpulled` |        GET        | Get a list of unpulled notifications by conversation ID.                              |
-| `/notifications/conversationId/:conversationId/pulled`   |        GET        | Get a list of pulled notifications by conversation ID.                                |
+| Path - internal routes prefixed by `/api-notification-pull` | Supported Methods | Description                                                                           |
+|-------------------------------------------------------------|:-----------------:|---------------------------------------------------------------------------------------|
+| `/notifications/:notificationId`                            |      DELETE       | Retrieves and deletes a notification from `api-notification-queue`.                   |
+| `/notifications/`                                           |        GET        | Retrieves all notifications, for a specific client id, from `api-notification-queue`. |
+| `/notifications/unpulled/:notificationId`                   |        GET        | Get an unpulled notification by notification ID.                                      |
+| `/notifications/unpulled`                                   |        GET        | Get a list of unpulled notifications.                                                 |
+| `/notifications/pulled/:notificationId`                     |        GET        | Get a pulled notification by notification ID.                                         |
+| `/notifications/pulled`                                     |        GET        | Get a list of pulled notifications.                                                   |
+| `/notifications/conversationId/:conversationId`             |        GET        | Get a list of notifications by conversation ID.                                       |
+| `/notifications/conversationId/:conversationId/unpulled`    |        GET        | Get a list of unpulled notifications by conversation ID.                              |
+| `/notifications/conversationId/:conversationId/pulled`      |        GET        | Get a list of pulled notifications by conversation ID.                                |
 
 
 ### Test-only specific routes
