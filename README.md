@@ -4,7 +4,6 @@ The Pull Notifications API is used by external client applications to "pull" bus
 For more information about the API, see the [API documentation](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/api-notification-pull).
 
 ## Development Setup
-- This microservice requires mongoDB 4.+
 - Run locally: `sbt run` which runs on port `9649` by default
 - Run with test endpoints: `sbt 'run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes'`
 
