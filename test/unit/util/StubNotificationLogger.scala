@@ -16,9 +16,8 @@
 
 package unit.util
 
-import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
+import uk.gov.hmrc.apinotificationpull.logging.{CdsLogger, NotificationLogger}
 import uk.gov.hmrc.apinotificationpull.model.SeqOfHeader
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 
 // Use purely to increase coverage
 class StubNotificationLogger(logger: CdsLogger) extends NotificationLogger(logger) {

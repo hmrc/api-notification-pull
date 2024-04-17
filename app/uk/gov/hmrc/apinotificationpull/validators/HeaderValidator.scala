@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.apinotificationpull.validators
 
-import com.google.inject.Inject
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.mvc.{ActionBuilder, AnyContent, BodyParser, ControllerComponents, Request, Result, Results}

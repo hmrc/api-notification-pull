@@ -16,8 +16,7 @@
 
 package unit.util
 
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.scalatest.MockitoSugar
 import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus.{Pulled, Unpulled}
 import uk.gov.hmrc.apinotificationpull.model.Notifications

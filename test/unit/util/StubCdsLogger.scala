@@ -16,7 +16,7 @@
 
 package unit.util
 
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
+import uk.gov.hmrc.apinotificationpull.logging.CdsLogger
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 // Use purely to increase coverage

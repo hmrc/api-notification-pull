@@ -21,12 +21,12 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.apinotificationpull.logging.NotificationLogger
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
+import uk.gov.hmrc.apinotificationpull.logging.{CdsLogger, NotificationLogger}
 import uk.gov.hmrc.http.HeaderCarrier
-import util.UnitSpec
 import unit.util.RequestHeaders.LoggingHeaders
+
 import util.MockitoPassByNameHelper.PassByNameVerifier
+import util.UnitSpec
 
 class NotificationLoggerSpec extends UnitSpec with MockitoSugar {
 

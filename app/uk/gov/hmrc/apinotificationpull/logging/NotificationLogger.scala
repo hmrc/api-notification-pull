@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.apinotificationpull.logging
 
-import com.google.inject.Inject
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.apinotificationpull.logging.LoggingHelper.formatWithHeaders
 import uk.gov.hmrc.apinotificationpull.model.SeqOfHeader
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 
 @Singleton
 class NotificationLogger @Inject()(logger: CdsLogger) {

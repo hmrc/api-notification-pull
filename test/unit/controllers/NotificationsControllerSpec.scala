@@ -30,11 +30,11 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.Results.Ok
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.apinotificationpull.controllers.NotificationsController
+import uk.gov.hmrc.apinotificationpull.logging.CdsLogger
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.apinotificationpull.presenters.NotificationPresenter
 import uk.gov.hmrc.apinotificationpull.services.ApiNotificationQueueService
 import uk.gov.hmrc.apinotificationpull.util.XmlBuilder
-import uk.gov.hmrc.customs.api.common.logging.CdsLogger
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import unit.fakes.SuccessfulHeaderValidatorFake

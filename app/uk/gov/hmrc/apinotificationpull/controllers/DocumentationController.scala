@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,16 @@
 package uk.gov.hmrc.apinotificationpull.controllers
 
 import controllers.Assets
-import javax.inject.{Inject, Singleton}
-import play.api.http.{ContentTypes, MimeTypes}
-import play.api.mvc.{Action, AnyContent, Codec, ControllerComponents}
-import uk.gov.hmrc.apinotificationpull.config.AppContext
-import views.txt
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ApiDocumentationController @Inject()(assets: Assets, cc: ControllerComponents, appContext: AppContext)
-  extends DocumentationController(assets, cc) {
+class DocumentationController @Inject()(assets: Assets, cc: ControllerComponents)
+  extends BackendController(cc) {
 
-  def definition(): Action[AnyContent] = Action.async {
-    Future.successful(Ok(txt.definition(appContext.apiContext)).as(ContentTypes.withCharset(MimeTypes.JSON)(Codec.utf_8)))
+  def conf(version: String, file: String): Action[AnyContent] = {
+    assets.at(s"/public/api/conf/$version", file)
   }
 }
