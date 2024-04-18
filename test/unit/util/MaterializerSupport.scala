@@ -16,9 +16,8 @@
 
 package unit.util
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.{ActorMaterializer, Materializer}
 
 trait MaterializerSupport {
   implicit val system = ActorSystem("Sys")

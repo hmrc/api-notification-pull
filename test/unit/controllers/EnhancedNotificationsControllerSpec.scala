@@ -16,6 +16,8 @@
 
 package unit.controllers
 
+import org.apache.pekko.stream.Materializer
+
 import java.util.UUID
 import java.util.UUID.fromString
 import org.mockito.ArgumentMatchers.{eq => meq, _}
@@ -48,6 +50,7 @@ import scala.concurrent.Future
 class EnhancedNotificationsControllerSpec extends UnitSpec with MaterializerSupport with MockitoSugar with BeforeAndAfterEach {
 
   private implicit val ec = Helpers.stubControllerComponents().executionContext
+  private implicit val mockMaterializer: Materializer = mock[Materializer]
   private val mockEnhancedApiNotificationQueueService = mock[EnhancedApiNotificationQueueService]
   private val mockAppContext: AppContext = mock[AppContext]
   private val xmlBuilder = new EnhancedXmlBuilder(mockAppContext)

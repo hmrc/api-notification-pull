@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apinotificationpull.controllers
 
-import akka.util.ByteString
+import org.apache.pekko.util.ByteString
 import play.api.http.{HttpEntity, MimeTypes}
 import play.api.mvc._
 import uk.gov.hmrc.apinotificationpull.config.AppContext

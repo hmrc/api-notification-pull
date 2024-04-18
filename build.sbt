@@ -23,7 +23,7 @@ import play.sbt.PlayImport.PlayKeys.playDefaultPort
 
 name := "api-notification-pull"
 
-lazy val CdsIntegrationComponentTest = config("it") extend Test
+lazy val CdsIntegrationComponentTest = config("component") extend Test
 
 val testConfig = Seq(CdsIntegrationComponentTest, Test)
 
@@ -69,6 +69,7 @@ lazy val integrationComponentTestSettings =
   inConfig(CdsIntegrationComponentTest)(Defaults.testTasks) ++
     Seq(
       CdsIntegrationComponentTest / testOptions := Seq(Tests.Filter(integrationComponentTestFilter)),
+      CdsIntegrationComponentTest / fork := false,
       CdsIntegrationComponentTest / parallelExecution := false,
       addTestReportOption(CdsIntegrationComponentTest, "int-comp-test-reports"),
       CdsIntegrationComponentTest / testGrouping := forkedJvmPerTestConfig((Test / definedTests).value, "integration", "component")

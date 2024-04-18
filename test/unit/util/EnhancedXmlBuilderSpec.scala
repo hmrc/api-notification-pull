@@ -28,7 +28,6 @@ class EnhancedXmlBuilderSpec extends UnitSpec with MockitoSugar {
   trait Setup {
     val apiContext = "notifications"
     val appContext = mock[AppContext]
-    when(appContext.apiContext).thenReturn(apiContext)
     val xmlBuilder = new EnhancedXmlBuilder(appContext)
   }
 
