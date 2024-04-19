@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import java.io.FileNotFoundException
 import scala.concurrent.Future
 
-class DocumentationControllerSpec extends IntegrationTestSpec with MockitoSugar with GuiceOneAppPerSuite {
+class ApiDocumentationControllerSpec extends IntegrationTestSpec with MockitoSugar with GuiceOneAppPerSuite {
 
   private implicit lazy val materializer = app.materializer
 
@@ -46,7 +46,7 @@ class DocumentationControllerSpec extends IntegrationTestSpec with MockitoSugar 
       )
     ).build()
 
-  "DocumentationController" should {
+  "ApiDocumentationController" should {
     "serve definition.json" in assertRoutedContent("/api/definition", definitionJsonContent)
   }
 
