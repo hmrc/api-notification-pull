@@ -11,12 +11,12 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"                   %% "bootstrap-test-play-30"    % bootstrap    % testScope,
-    "org.mockito"                   %% "mockito-scala-scalatest"   % "1.17.31"    % testScope,
-    "org.wiremock"                   % "wiremock-standalone"       % "3.5.3"      % testScope,
-    "com.vladsch.flexmark"           % "flexmark-all"              % "0.64.8"     % testScope,
-    "org.scalatestplus"             %% "scalatestplus-mockito"     % "1.0.0-M2"   % testScope,
-    "org.scalatestplus.play"        %% "scalatestplus-play"        % "7.0.1"      % testScope,
-    "com.fasterxml.jackson.module"  %% "jackson-module-scala"      % "2.17.0"     % testScope
+    "uk.gov.hmrc"                   %% s"bootstrap-test-$playVersion"    % bootstrap    % Test,
+    "org.mockito"                   %% "mockito-scala-scalatest"         % "1.17.31"    % Test,
+    "org.wiremock"                   % "wiremock-standalone"             % "3.5.3"      % Test,
+    "com.vladsch.flexmark"           % "flexmark-all"                    % "0.64.8"     % Test,
+    "org.scalatestplus"             %% "scalatestplus-mockito"           % "1.0.0-M2"   % Test,
+    "org.scalatestplus.play"        %% "scalatestplus-play"              % "7.0.1"      % Test,
+    "com.fasterxml.jackson.module"  %% "jackson-module-scala"            % "2.17.0"     % Test
   )
 }
