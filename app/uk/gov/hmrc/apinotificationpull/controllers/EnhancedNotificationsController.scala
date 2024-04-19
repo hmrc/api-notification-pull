@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apinotificationpull.controllers
 
 import org.apache.pekko.util.ByteString
-import play.api.http.{HttpEntity, MimeTypes}
+import play.api.http.HttpEntity
 import play.api.mvc._
 import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.apinotificationpull.controllers.CustomHeaderNames.{X_CLIENT_ID_HEADER_NAME, X_CONVERSATION_ID_HEADER_NAME, getHeadersFromRequest}
@@ -108,7 +108,7 @@ class EnhancedNotificationsController @Inject()(enhancedApiNotificationQueueServ
       }
 
       val newNotificatons = notifications.copy(list)
-      Ok(enhancedXmlBuilder.toXml(newNotificatons, notificationStatus)).as(MimeTypes.XML)
+      Ok(enhancedXmlBuilder.toXml(newNotificatons, notificationStatus)).as(XML)
     } recover recovery
   }
 
