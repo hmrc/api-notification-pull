@@ -26,7 +26,6 @@ import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.Helpers
 import uk.gov.hmrc.apinotificationpull.connectors.EnhancedApiNotificationQueueConnector
-import uk.gov.hmrc.apinotificationpull.logging.CdsLogger
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http._
@@ -54,7 +53,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
     val conversationId = UUID.fromString("0ad764d1-ba29-4bfb-b7f7-25adbede0002")
     val headers = Map(X_CLIENT_ID_HEADER_NAME -> Seq(ClientId))
     val notification = Notification(notificationId, headers.map(h => h._1 -> h._2.head), "notification-payload")
-    val stubLogger = new StubNotificationLogger(new CdsLogger(mock[ServicesConfig]))
+    val stubLogger = new StubNotificationLogger(mock[ServicesConfig])
     val enhancedApiNotificationQueueConnector = new EnhancedApiNotificationQueueConnector(mockServicesConfig, mockHttpClient, stubLogger)
 
     when(mockServicesConfig.baseUrl("api-notification-queue")).thenReturn("http://api-notification-queue.url")

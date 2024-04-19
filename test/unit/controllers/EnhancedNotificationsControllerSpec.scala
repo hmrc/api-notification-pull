@@ -17,9 +17,6 @@
 package unit.controllers
 
 import org.apache.pekko.stream.Materializer
-
-import java.util.UUID
-import java.util.UUID.fromString
 import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -32,7 +29,6 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.apinotificationpull.controllers.EnhancedNotificationsController
-import uk.gov.hmrc.apinotificationpull.logging.CdsLogger
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus.{Pulled, Unpulled}
 import uk.gov.hmrc.apinotificationpull.model.{Notification, NotificationStatus, Notifications}
 import uk.gov.hmrc.apinotificationpull.services.EnhancedApiNotificationQueueService
@@ -45,6 +41,8 @@ import unit.util.XmlUtil.string2xml
 import unit.util.{MaterializerSupport, StubNotificationLogger}
 import util.UnitSpec
 
+import java.util.UUID
+import java.util.UUID.fromString
 import scala.concurrent.Future
 
 class EnhancedNotificationsControllerSpec extends UnitSpec with MaterializerSupport with MockitoSugar with BeforeAndAfterEach {
@@ -54,7 +52,7 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with MaterializerSupp
   private val mockEnhancedApiNotificationQueueService = mock[EnhancedApiNotificationQueueService]
   private val mockAppContext: AppContext = mock[AppContext]
   private val xmlBuilder = new EnhancedXmlBuilder(mockAppContext)
-  private val mockLogger = new StubNotificationLogger(new CdsLogger(mock[ServicesConfig]))
+  private val mockLogger = new StubNotificationLogger(mock[ServicesConfig])
 
   private val errorNotFoundXml = scala.xml.Utility.trim(
       <errorResponse>
@@ -82,7 +80,7 @@ class EnhancedNotificationsControllerSpec extends UnitSpec with MaterializerSupp
     val conversationId: UUID = fromString("19aaef3d-1c8d-4837-a290-90a09434e205")
 
     val validHeaders = Seq(ACCEPT_HEADER, X_CLIENT_ID_HEADER)
-    val headerValidator = new SuccessfulHeaderValidatorFake(new StubNotificationLogger(new CdsLogger(mock[ServicesConfig])), Helpers.stubControllerComponents())
+    val headerValidator = new SuccessfulHeaderValidatorFake(new StubNotificationLogger(mock[ServicesConfig]), Helpers.stubControllerComponents())
 
     val controller = new EnhancedNotificationsController(mockEnhancedApiNotificationQueueService, headerValidator, xmlBuilder, Helpers.stubControllerComponents(), mockLogger, mockAppContext)
 
