@@ -16,8 +16,6 @@
 
 package unit.connectors
 
-import java.util.UUID
-import java.util.UUID.fromString
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
@@ -28,13 +26,14 @@ import play.api.test.Helpers
 import uk.gov.hmrc.apinotificationpull.connectors.EnhancedApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.NotificationStatus._
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
-import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.{HttpClient, _}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
 import unit.util.RequestHeaders.{ClientId, X_CLIENT_ID_HEADER, X_CLIENT_ID_HEADER_NAME}
 import unit.util.StubNotificationLogger
 import util.UnitSpec
 
+import java.util.UUID
+import java.util.UUID.fromString
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with Eventually {
@@ -43,7 +42,7 @@ class EnhancedApiNotificationQueueConnectorSpec extends UnitSpec with MockitoSug
 
     implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders(X_CLIENT_ID_HEADER)
 
-    implicit val ec = Helpers.stubControllerComponents().executionContext
+    implicit val ec: ExecutionContext = Helpers.stubControllerComponents().executionContext
     val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
     val mockHttpClient: HttpClient = mock[HttpClient]
     val mockHttpResponse: HttpResponse = mock[HttpResponse]

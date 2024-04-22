@@ -2,7 +2,6 @@ import sbt.*
 
 object AppDependencies {
 
-  private val testScope = "test,component"
   val playVersion = "play-30"
   val bootstrap = "8.5.0"
 

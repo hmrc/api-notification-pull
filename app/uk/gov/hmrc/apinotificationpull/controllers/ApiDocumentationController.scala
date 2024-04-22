@@ -17,14 +17,13 @@
 package uk.gov.hmrc.apinotificationpull.controllers
 
 import controllers.Assets
-
-import javax.inject.{Inject, Singleton}
 import play.api.http.{ContentTypes, MimeTypes}
 import play.api.mvc.{Action, AnyContent, Codec, ControllerComponents}
 import uk.gov.hmrc.apinotificationpull.config.AppContext
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import views.txt
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton

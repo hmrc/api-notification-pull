@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.apinotificationpull.logging
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.apinotificationpull.logging.LoggingHelper.formatWithHeaders
 import uk.gov.hmrc.apinotificationpull.model.SeqOfHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class NotificationLogger @Inject()(serviceConfig: ServicesConfig) {
