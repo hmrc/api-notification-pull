@@ -21,7 +21,8 @@ import play.api.Configuration
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppContext @Inject()(configuration: Configuration .definition.scope"
+class AppContext @Inject()(configuration: Configuration) {
+  private val apiScopeConfigKey = "api.definition.scope"
   private val apiContextConfigKey = "api.context"
   private val notificationsLimitConfigKey = "notifications.limit"
   private def apiConfigException(apiConfigKey: String) = new IllegalStateException(s"$apiConfigKey is not configured")
