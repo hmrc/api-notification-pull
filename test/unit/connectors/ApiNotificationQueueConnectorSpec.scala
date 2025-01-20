@@ -33,7 +33,7 @@ import uk.gov.hmrc.apinotificationpull.connectors.ApiNotificationQueueConnector
 import uk.gov.hmrc.apinotificationpull.model.{Notification, Notifications}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClientV2Provider}
+import uk.gov.hmrc.play.bootstrap.http.HttpClientV2Provider
 import unit.util.RequestHeaders.{ClientId, X_CLIENT_ID_HEADER_NAME}
 import util.ExternalServicesConfig.{Host, Port}
 import util.{UnitSpec, WireMockRunner}
