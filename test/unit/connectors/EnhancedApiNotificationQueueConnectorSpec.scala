@@ -16,7 +16,6 @@
 
 package unit.connectors
 
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
@@ -34,7 +33,6 @@ import unit.util.RequestHeaders.{ClientId, X_CLIENT_ID_HEADER, X_CLIENT_ID_HEADE
 import unit.util.StubNotificationLogger
 import util.UnitSpec
 
-import java.net.URI
 import java.util.UUID
 import java.util.UUID.fromString
 import scala.concurrent.{ExecutionContext, Future}
